@@ -69,29 +69,3 @@ export const animationInfosReducer = (
 
   return animationInfos;
 };
-
-const resetMatrix = (
-  cols?: number,
-  rows?: number,
-  view?: ViewType,
-  pattern?: string
-): GridMatrixType => {
-  const generateMatrix = (cols, rows, pattern): GridMatrixType =>
-    //   Array.from({ length: rows }, () =>
-    //   Array.from({ length: cols }, () => {
-    //     type: GridNodeType.blank,
-    //     weight: 0,
-    //     distance: Infinity,
-    //     isVisited: false,
-    //     parent: null, // coordinates of the parent array used to generate path
-    //     class: '',
-    //   }))
-    // )
-
-    [];
-
-  if (!cols || !rows) {
-  }
-
-  return [];
-};
