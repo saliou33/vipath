@@ -7,7 +7,7 @@ export type AnimationType = IAnimation;
 
 export enum GridNodeType {
   goal,
-  root,
+  start,
   weighted,
   bridge,
   wall,
@@ -18,8 +18,8 @@ export interface IGridNode {
   type: GridNodeType;
   weight: number;
   distance: number;
-  isVisited: number;
-  parent: CoordType; // coordinates of the parent array used to generate path
+  isVisited: boolean;
+  parent: CoordType | null; // coordinates of the parent array used to generate path
   class: string;
 }
 

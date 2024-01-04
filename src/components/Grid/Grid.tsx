@@ -1,23 +1,23 @@
-import GridItem from "../GridItem/GridItem";
+import { useContext } from "react";
+import { Context, ContextValueType } from "../../context/context";
+import GridNode from "../GridItem/GridNode";
 
-type PropsType = {
-  matrix: number[][];
-};
+const Grid = () => {
+  const { animationInfos } = useContext<ContextValueType>(Context);
+  const { matrix, rows, cols, nodeSize } = animationInfos;
 
-const Grid = ({ matrix }: PropsType) => {
   const gridStyle = {
     display: "grid",
-    gridTemplateRows: `repeat(${matrix.length}, 1fr)`,
-    gridTemplateColumns: `repeat(${
-      matrix.length > 0 ? matrix[0].length : 0
-    }, 1fr)`,
+    gridTemplateRows: `repeat(${rows}, ${nodeSize}px)`,
+    gridTemplateColumns: `repeat(${cols}, ${nodeSize}px)`,
   };
 
   return (
-    <div className={` bg-slate-300`} style={gridStyle}>
-      {matrix.map((row, i) =>
-        row.map((v, j) => <GridItem key={`${i}-${j}`} />)
-      )}
+    <div className={`bg-slate-100`} style={gridStyle}>
+      {matrix &&
+        matrix.map((row, i) =>
+          row.map((_, j) => <GridNode key={`${i}-${j}`} />)
+        )}
     </div>
   );
 };

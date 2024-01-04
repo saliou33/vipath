@@ -14,6 +14,7 @@ export enum AnimationInfosActionType {
   random,
   reset,
   speed,
+  nodeSize,
   animate,
 }
 export type AnimationInfosAction =
@@ -22,8 +23,9 @@ export type AnimationInfosAction =
     }
   | {
       type: AnimationInfosActionType.reset;
-      payload?: { cols?: number; rows?: number; pattern?: string };
+      payload: AnimationInfos;
     }
+  | { type: AnimationInfosActionType.nodeSize; payload: { nodeSize: number } }
   | { type: AnimationInfosActionType.view; payload: ViewType }
   | { type: AnimationInfosActionType.speed; payload: { speed: number } }
   | { type: AnimationInfosActionType.animate; payload: AnimationType };
@@ -35,7 +37,8 @@ export interface AnimationInfos {
   matrix: GridMatrixType | null;
   animations: AnimationArrayType | null;
   shortestPath: ArrayCoordType | null;
-  view: ViewType | null;
+  view: ViewType;
+  nodeSize: number;
   isRunning: boolean;
   speed: number;
 }
@@ -45,7 +48,8 @@ export const initialAnimationsInfos: AnimationInfos = {
   matrix: [],
   animations: [],
   shortestPath: [],
-  view: null,
+  nodeSize: 30,
+  view: { height: 0, width: 0 },
   isRunning: false,
   speed: 100,
 };
@@ -56,7 +60,7 @@ export const animationInfosReducer = (
 ): AnimationInfos => {
   switch (action.type) {
     case AnimationInfosActionType.reset:
-      return { ...animationInfos };
+      return reset(action.payload);
     case AnimationInfosActionType.speed:
       return { ...animationInfos };
     case AnimationInfosActionType.view:
@@ -68,4 +72,67 @@ export const animationInfosReducer = (
   }
 
   return animationInfos;
+};
+
+const reset = (animationInfos: AnimationInfos) => {
+  const { cols, rows, nodeSize, view } = animationInfos;
+
+  // fn to create matrix
+  const createMatrix = (cols: number, rows: number): GridMatrixType => {
+    const matrix: GridMatrixType = [...Array.from({ length: rows }, () => [])];
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        matrix[i].push({
+          type: GridNodeType.blank,
+          weight: 1,
+          distance: Infinity,
+          isVisited: false,
+          parent: null, // coordinates of the parent array used to generate path
+          class: "",
+        });
+      }
+    }
+
+    return matrix;
+  };
+
+  // create the blank matrix
+  const newCols = cols == Infinity ? Math.floor(view?.width / nodeSize) : cols;
+  const newRows = rows == Infinity ? Math.floor(view?.height / nodeSize) : rows;
+  const matrix = createMatrix(newCols, newRows);
+
+  // TODO: handle pattern type
+
+  // add start node and goal node randomly
+
+  const [colStart, colGoal] = [
+    Math.floor(Math.random() % (newCols / 2)),
+    Math.floor((Math.random() % (newCols / 2)) + newCols / 3),
+  ];
+
+  const [rowStart, rowGoal] = [
+    Math.floor(newCols / 5),
+    Math.floor(newCols / 5),
+  ];
+
+  matrix[rowStart][colStart] = {
+    ...matrix[rowStart][colStart],
+    type: GridNodeType.start,
+    distance: 0,
+  };
+
+  matrix[rowGoal][colGoal] = {
+    ...matrix[rowGoal][colGoal],
+    type: GridNodeType.goal,
+  };
+
+  return {
+    ...animationInfos,
+    matrix,
+    shortestPath: [],
+    isRunning: false,
+    cols: newCols,
+    rows: newRows,
+  };
 };
