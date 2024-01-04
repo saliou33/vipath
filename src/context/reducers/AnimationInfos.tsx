@@ -108,7 +108,7 @@ const reset = (animationInfos: AnimationInfos) => {
 
   const [colStart, colGoal] = [
     Math.floor(Math.random() % (newCols / 2)),
-    Math.floor((Math.random() % (newCols / 2)) + newCols / 3),
+    Math.floor(newCols - (Math.random() % (newCols / 2))),
   ];
 
   const [rowStart, rowGoal] = [

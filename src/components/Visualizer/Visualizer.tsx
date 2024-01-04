@@ -2,6 +2,7 @@ import { useContext, useLayoutEffect, useRef } from "react";
 import Grid from "../Grid/Grid";
 import { Context, ContextValueType } from "../../context/context";
 import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
+import PointerIndicator from "../Pointer/PointerIndicator";
 
 const Visualizer = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -26,6 +27,7 @@ const Visualizer = () => {
 
   return (
     <div className="flex justify-center items-center h-full w-full" ref={ref}>
+      <PointerIndicator parentRef={ref} />
       <Grid />
     </div>
   );

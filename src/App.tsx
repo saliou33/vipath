@@ -7,6 +7,10 @@ import {
 } from "./context/reducers/AnimationInfos";
 import Navbar from "./components/Navbar/Navbar";
 import Visualizer from "./components/Visualizer/Visualizer";
+import {
+  actionInfosReducer,
+  initialActionInfos,
+} from "./context/reducers/ActionInfos";
 
 const App = () => {
   const [animationInfos, dispatchAnimationInfos] = useReducer(
@@ -14,8 +18,20 @@ const App = () => {
     initialAnimationsInfos
   );
 
+  const [actionInfos, dispatchActionInfos] = useReducer(
+    actionInfosReducer,
+    initialActionInfos
+  );
+
   return (
-    <Context.Provider value={{ animationInfos, dispatchAnimationInfos }}>
+    <Context.Provider
+      value={{
+        animationInfos,
+        dispatchAnimationInfos,
+        actionInfos,
+        dispatchActionInfos,
+      }}
+    >
       <div className="font-roboto flex flex-col h-screen">
         <Navbar />
         <Visualizer />

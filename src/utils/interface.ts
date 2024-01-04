@@ -8,7 +8,7 @@ export type AnimationType = IAnimation;
 export enum GridNodeType {
   goal,
   start,
-  weighted,
+  weight,
   bridge,
   wall,
   blank,

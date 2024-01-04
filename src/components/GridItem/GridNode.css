@@ -1,0 +1,23 @@
+.grid-node {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: theme("colors.slate.200");
+  border: 0.1px solid theme("colors.slate.500");
+}
+
+.start {
+  background-color: theme("colors.yellow.200");
+}
+
+.wall {
+  background-color: theme("colors.gray.700");
+}
+
+.goal {
+  background-color: theme("colors.green.200");
+}
+
+svg {
+  fill: theme("colors.gray.700");
+}
