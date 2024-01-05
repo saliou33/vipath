@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { Context } from "../../context/context";
 import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
-import { ItemType, algorithms, pointers } from "../../utils/contant";
+import { ItemType, algorithms, pointers, actions } from "../../utils/contant";
 import Dropdown from "../Dropdown/Dropdown";
+import ActionList from "../ActionList/ActionList";
 
 const Navbar = () => {
   const { dispatchActionInfos } = useContext(Context);
@@ -22,17 +23,20 @@ const Navbar = () => {
   };
 
   return (
-    <div className="py-4 px-2 bg-gray-800 flex gap-4">
-      <Dropdown
-        name="Select Algorithm"
-        items={algorithms}
-        handleClick={handleSelectAlgo}
-      />
-      <Dropdown
-        name="Draw Node"
-        items={pointers}
-        handleClick={handleSelectPointer}
-      />
+    <div className="p-4 bg-gray-800 flex justify-between">
+      <ActionList actions={actions} />
+      <div className="flex gap-4">
+        <Dropdown
+          name="Select Algorithm"
+          items={algorithms}
+          handleClick={handleSelectAlgo}
+        />
+        <Dropdown
+          name="Draw Node"
+          items={pointers}
+          handleClick={handleSelectPointer}
+        />
+      </div>
     </div>
   );
 };

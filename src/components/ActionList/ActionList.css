@@ -1,0 +1,11 @@
+.play {
+  fill: theme("colors.green.200");
+}
+
+.pause {
+  fill: theme("colors.red.200");
+}
+
+.reset {
+  fill: theme("colors.blue.200");
+}

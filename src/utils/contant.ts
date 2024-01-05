@@ -1,6 +1,13 @@
 import { ReactNode } from "react";
 import { IconType } from "react-icons";
-import { BiCircle, BiDumbbell, BiSolidRectangle } from "react-icons/bi";
+import {
+  BiCircle,
+  BiDumbbell,
+  BiPause,
+  BiPlay,
+  BiReset,
+  BiSolidRectangle,
+} from "react-icons/bi";
 
 export enum PointerType {
   wall = "wall",
@@ -24,13 +31,21 @@ export enum PatternType {
   blank,
 }
 
-export type ItemListKeyType = PointerType | AlgoType | PatternType;
+export enum ActionType {
+  play = "play",
+  pause = "pause",
+  resume = "resume",
+  reset = "reset",
+}
+
+export type ItemListKeyType = PointerType | AlgoType | PatternType | ActionType;
 
 export type ItemType = {
   key: ItemListKeyType;
   name: string;
   fn?: () => [];
   icon?: IconType;
+  class?: string;
 };
 
 export class ItemList extends Map<ItemListKeyType, ItemType> {
@@ -62,6 +77,36 @@ export const algorithms: ItemList = new ItemList([
     {
       key: AlgoType.bidirectional_swarm,
       name: "Bidirectional Swarm Algorithm",
+    },
+  ],
+]);
+
+export const actions: ItemList = new ItemList([
+  [
+    ActionType.play,
+    {
+      key: ActionType.play,
+      name: "play",
+      icon: BiPlay,
+      class: ActionType.play,
+    },
+  ],
+  [
+    ActionType.pause,
+    {
+      key: ActionType.pause,
+      name: "pause",
+      icon: BiPause,
+      class: ActionType.pause,
+    },
+  ],
+  [
+    ActionType.reset,
+    {
+      key: ActionType.reset,
+      name: "reset",
+      icon: BiReset,
+      class: ActionType.reset,
     },
   ],
 ]);
