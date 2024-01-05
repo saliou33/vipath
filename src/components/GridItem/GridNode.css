@@ -4,6 +4,7 @@
   align-items: center;
   background-color: theme("colors.slate.200");
   border: 0.1px solid theme("colors.slate.500");
+  user-select: none;
 }
 
 .start {
@@ -20,4 +21,5 @@
 
 svg {
   fill: theme("colors.gray.700");
+  pointer-events: none;
 }

@@ -1,17 +1,21 @@
-export type CoordType = Array<2>;
+export type CoordType = [number, number];
 export type GridMatrixType = Array<Array<IGridNode>>;
 export type AnimationArrayType = Array<IAnimation>;
 export type ArrayCoordType = Array<CoordType>;
 export type ViewType = IView;
 export type AnimationType = IAnimation;
+export type GridNodeIndexedArrayType = Array<{
+  index: CoordType;
+  node: IGridNode;
+}>;
 
 export enum GridNodeType {
-  goal,
-  start,
-  weight,
-  bridge,
-  wall,
-  blank,
+  goal = "goal",
+  start = "start",
+  weight = "weight",
+  bridge = "bridge",
+  wall = "wall",
+  blank = "blank",
 }
 
 export interface IGridNode {

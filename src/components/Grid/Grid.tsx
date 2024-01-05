@@ -3,7 +3,8 @@ import { Context, ContextValueType } from "../../context/context";
 import GridNode from "../GridItem/GridNode";
 
 const Grid = () => {
-  const { animationInfos } = useContext<ContextValueType>(Context);
+  const { animationInfos, actionInfos, dispatchAnimationInfos } =
+    useContext<ContextValueType>(Context);
   const { matrix, rows, cols, nodeSize } = animationInfos;
   const [isDrawing, setIsDrawing] = useState(false);
 
@@ -21,9 +22,12 @@ const Grid = () => {
           row.map((node, j) => (
             <GridNode
               key={`${i}-${j}`}
+              coord={[i, j]}
+              pointer={actionInfos.selectedPointer}
               node={node}
               isDrawing={isDrawing}
               setIsDrawing={setIsDrawing}
+              dispatch={dispatchAnimationInfos}
             />
           ))
         )}

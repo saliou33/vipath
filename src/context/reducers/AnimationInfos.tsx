@@ -3,6 +3,7 @@ import {
   AnimationType,
   ArrayCoordType,
   GridMatrixType,
+  GridNodeIndexedArrayType,
   GridNodeType,
   ViewType,
 } from "../../utils/interface";
@@ -13,6 +14,7 @@ export enum AnimationInfosActionType {
   view,
   random,
   reset,
+  update,
   speed,
   nodeSize,
   animate,
@@ -24,6 +26,10 @@ export type AnimationInfosAction =
   | {
       type: AnimationInfosActionType.reset;
       payload: AnimationInfos;
+    }
+  | {
+      type: AnimationInfosActionType.update;
+      payload: GridNodeIndexedArrayType;
     }
   | { type: AnimationInfosActionType.nodeSize; payload: { nodeSize: number } }
   | { type: AnimationInfosActionType.view; payload: ViewType }
@@ -61,6 +67,8 @@ export const animationInfosReducer = (
   switch (action.type) {
     case AnimationInfosActionType.reset:
       return reset(action.payload);
+    case AnimationInfosActionType.update:
+      return update(animationInfos, action.payload);
     case AnimationInfosActionType.speed:
       return { ...animationInfos };
     case AnimationInfosActionType.view:
@@ -72,6 +80,21 @@ export const animationInfosReducer = (
   }
 
   return animationInfos;
+};
+
+const update = (
+  animationInfos: AnimationInfos,
+  nodes: GridNodeIndexedArrayType
+) => {
+  const { matrix } = animationInfos;
+
+  if (matrix) {
+    nodes.forEach(({ index, node }) => {
+      matrix[index[0]][index[1]] = node;
+    });
+  }
+
+  return { ...animationInfos, matrix };
 };
 
 const reset = (animationInfos: AnimationInfos) => {
@@ -107,13 +130,14 @@ const reset = (animationInfos: AnimationInfos) => {
   // add start node and goal node randomly
 
   const [colStart, colGoal] = [
-    Math.floor(Math.random() % (newCols / 2)),
-    Math.floor(newCols - (Math.random() % (newCols / 2))),
+    Math.floor(newCols / 6),
+    Math.floor(newCols - newCols / 6),
   ];
+  console.log(colStart, colGoal);
 
   const [rowStart, rowGoal] = [
-    Math.floor(newCols / 5),
-    Math.floor(newCols / 5),
+    Math.floor(newRows / 2),
+    Math.floor(newRows / 2),
   ];
 
   matrix[rowStart][colStart] = {

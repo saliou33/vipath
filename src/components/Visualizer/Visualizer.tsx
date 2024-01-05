@@ -1,7 +1,7 @@
 import { useContext, useLayoutEffect, useRef } from "react";
-import Grid from "../Grid/Grid";
 import { Context, ContextValueType } from "../../context/context";
 import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
+import Grid from "../Grid/Grid";
 import PointerIndicator from "../Pointer/PointerIndicator";
 
 const Visualizer = () => {

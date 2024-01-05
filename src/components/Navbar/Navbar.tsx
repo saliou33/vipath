@@ -1,11 +1,11 @@
-import { useContext, useEffect } from "react";
-import { ItemType, algorithms, pointers } from "../../utils/contant";
-import Dropdown from "../Dropdown/Dropdown";
+import { useContext } from "react";
 import { Context } from "../../context/context";
 import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
+import { ItemType, algorithms, pointers } from "../../utils/contant";
+import Dropdown from "../Dropdown/Dropdown";
 
 const Navbar = () => {
-  const { actionInfos, dispatchActionInfos } = useContext(Context);
+  const { dispatchActionInfos } = useContext(Context);
 
   const handleSelectAlgo = (item: ItemType) => {
     dispatchActionInfos({
@@ -20,10 +20,6 @@ const Navbar = () => {
       payload: { selectedPointer: item },
     });
   };
-
-  useEffect(() => {
-    console.log(actionInfos);
-  }, [actionInfos]);
 
   return (
     <div className="py-4 px-2 bg-gray-800 flex gap-4">

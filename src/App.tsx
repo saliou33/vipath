@@ -32,7 +32,7 @@ const App = () => {
         dispatchActionInfos,
       }}
     >
-      <div className="font-roboto flex flex-col h-screen">
+      <div className="font-lora text-[.8rem] flex flex-col h-screen">
         <Navbar />
         <Visualizer />
       </div>

@@ -24,16 +24,13 @@ const PointerIndicator = ({ parentRef }: PropsType) => {
     const current = parentRef.current;
 
     const handleMouseOver = (e: MouseEvent) => {
-      if (!show) {
+      if (current?.contains(e.target as Node)) {
         setShow(true);
+        setCoord([e.pageX + 20, e.pageY + 20]);
       }
-      setCoord([e.pageX, e.pageY]);
     };
     const handleMouseOut = () => {
-      if (show) {
-        setShow(false);
-        setCoord([0, 0]);
-      }
+      setShow(false);
     };
 
     if (current) {
@@ -54,7 +51,9 @@ const PointerIndicator = ({ parentRef }: PropsType) => {
         ref={ref}
         style={{ left: coord[0] + "px", top: coord[1] + "px" }}
       >
-        {selectedPointer?.icon && <selectedPointer.icon />}
+        {selectedPointer?.icon && (
+          <selectedPointer.icon className="text-[0.5rem]" />
+        )}
       </div>
     )
   );

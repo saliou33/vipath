@@ -3,10 +3,10 @@ import { IconType } from "react-icons";
 import { BiCircle, BiDumbbell, BiSolidRectangle } from "react-icons/bi";
 
 export enum PointerType {
-  wall,
-  bridge,
-  weigth,
-  blank,
+  wall = "wall",
+  bridge = "bridge",
+  weight = "weight",
+  blank = "blank",
 }
 
 export enum AlgoType {
@@ -69,15 +69,15 @@ export const algorithms: ItemList = new ItemList([
 export const pointers: ItemList = new ItemList([
   [
     PointerType.wall,
-    { key: PointerType.wall, name: "Wall", icon: BiSolidRectangle },
+    { key: PointerType.wall, name: "wall", icon: BiSolidRectangle },
   ],
   [
     PointerType.bridge,
-    { key: PointerType.bridge, name: "Bridge", icon: BiCircle },
+    { key: PointerType.bridge, name: "bridge", icon: BiCircle },
   ],
   [
-    PointerType.weigth,
-    { key: PointerType.weigth, name: "Weight", icon: BiDumbbell },
+    PointerType.weight,
+    { key: PointerType.weight, name: "weight", icon: BiDumbbell },
   ],
   [PointerType.blank, { key: PointerType.blank, name: "" }],
 ]);
