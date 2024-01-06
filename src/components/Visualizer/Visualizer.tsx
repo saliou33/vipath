@@ -2,7 +2,7 @@ import { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import { Context, ContextValueType } from "../../context/context";
 import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
 import Grid from "../Grid/Grid";
-import PointerIndicator from "../Pointer/PointerIndicator";
+import PointerIndicator from "../PointerIndicator/PointerIndicator";
 import { AnimationActionType } from "../../utils/contant";
 import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
 
