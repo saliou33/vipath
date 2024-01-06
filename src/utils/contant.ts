@@ -31,14 +31,18 @@ export enum PatternType {
   blank,
 }
 
-export enum ActionType {
+export enum AnimationActionType {
   play = "play",
   pause = "pause",
   resume = "resume",
   reset = "reset",
 }
 
-export type ItemListKeyType = PointerType | AlgoType | PatternType | ActionType;
+export type ItemListKeyType =
+  | PointerType
+  | AlgoType
+  | PatternType
+  | AnimationActionType;
 
 export type ItemType = {
   key: ItemListKeyType;
@@ -83,30 +87,30 @@ export const algorithms: ItemList = new ItemList([
 
 export const actions: ItemList = new ItemList([
   [
-    ActionType.play,
+    AnimationActionType.play,
     {
-      key: ActionType.play,
+      key: AnimationActionType.play,
       name: "play",
       icon: BiPlay,
-      class: ActionType.play,
+      class: AnimationActionType.play,
     },
   ],
   [
-    ActionType.pause,
+    AnimationActionType.pause,
     {
-      key: ActionType.pause,
+      key: AnimationActionType.pause,
       name: "pause",
       icon: BiPause,
-      class: ActionType.pause,
+      class: AnimationActionType.pause,
     },
   ],
   [
-    ActionType.reset,
+    AnimationActionType.reset,
     {
-      key: ActionType.reset,
+      key: AnimationActionType.reset,
       name: "reset",
       icon: BiReset,
-      class: ActionType.reset,
+      class: AnimationActionType.reset,
     },
   ],
 ]);

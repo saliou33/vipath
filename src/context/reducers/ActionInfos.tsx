@@ -18,7 +18,7 @@ export enum ActionInfosActionType {
 export type ActionInfosAction =
   | {
       type: ActionInfosActionType.set_action;
-      payload: { animationAction: ItemType };
+      payload: { animationAction: ItemType | null };
     }
   | {
       type: ActionInfosActionType.set_algo;
@@ -37,13 +37,14 @@ export interface ActionInfos {
   selectedAlgo: ItemType;
   selectedPointer: ItemType;
   selectedPattern: ItemType;
-  animationAction?: ItemType;
+  animationAction: ItemType | null;
 }
 
 export const initialActionInfos: ActionInfos = {
   selectedAlgo: algorithms.get(AlgoType.djikstras) as ItemType,
   selectedPointer: pointers.get(PointerType.blank) as ItemType,
   selectedPattern: patterns.get(PatternType.blank) as ItemType,
+  animationAction: null,
 };
 
 export const actionInfosReducer = (

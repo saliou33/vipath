@@ -127,13 +127,11 @@ const reset = (animationInfos: AnimationInfos) => {
 
   // TODO: handle pattern type
 
-  // add start node and goal node randomly
-
+  // add start node and goal node
   const [colStart, colGoal] = [
     Math.floor(newCols / 6),
     Math.floor(newCols - newCols / 6),
   ];
-  console.log(colStart, colGoal);
 
   const [rowStart, rowGoal] = [
     Math.floor(newRows / 2),

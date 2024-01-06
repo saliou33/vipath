@@ -11,7 +11,7 @@ const ActionList = ({ actions, handleClick }: PropsType) => {
     <div className="flex gap-2">
       {actions.map((item, key) => (
         <button key={key} onClick={() => handleClick(item)}>
-          {item.icon && <item.icon className={`text-[2rem] ${item.class}`} />}
+          {item.icon && <item.icon className={`${item.class}`} />}
         </button>
       ))}
     </div>

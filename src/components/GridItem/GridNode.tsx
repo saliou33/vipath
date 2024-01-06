@@ -74,6 +74,10 @@ const GridNode = ({
   useLayoutEffect(() => {
     const current = ref.current;
 
+    //make sure that the edge node are immutable
+    if (node.type == GridNodeType.goal || node.type == GridNodeType.start)
+      return () => [];
+
     if (current) {
       current.addEventListener("mousedown", handleMouseDown);
       current.addEventListener("mouseenter", handleMouseEnter);
@@ -91,15 +95,17 @@ const GridNode = ({
 
   return (
     <div ref={ref} className={`grid-node ${node.type}`}>
-      {node.type == GridNodeType.start ? (
-        <BiCool />
-      ) : node.type == GridNodeType.weight ? (
-        <BiDumbbell />
-      ) : node.type == GridNodeType.goal ? (
-        <BiMap />
-      ) : node.type == GridNodeType.bridge ? (
-        <BiDollarCircle />
-      ) : null}
+      <span className="z-[700]">
+        {node.type == GridNodeType.start ? (
+          <BiCool />
+        ) : node.type == GridNodeType.weight ? (
+          <BiDumbbell />
+        ) : node.type == GridNodeType.goal ? (
+          <BiMap />
+        ) : node.type == GridNodeType.bridge ? (
+          <BiDollarCircle />
+        ) : null}
+      </span>
     </div>
   );
 };

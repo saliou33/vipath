@@ -1,16 +1,22 @@
-import { useContext, useLayoutEffect, useRef } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import { Context, ContextValueType } from "../../context/context";
 import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
 import Grid from "../Grid/Grid";
 import PointerIndicator from "../Pointer/PointerIndicator";
+import { AnimationActionType } from "../../utils/contant";
+import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
 
 const Visualizer = () => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { animationInfos, dispatchAnimationInfos } =
-    useContext<ContextValueType>(Context);
+  const {
+    animationInfos,
+    actionInfos,
+    dispatchAnimationInfos,
+    dispatchActionInfos,
+  } = useContext<ContextValueType>(Context);
 
-  useLayoutEffect(() => {
+  const resetMatrix = () => {
     dispatchAnimationInfos({
       type: AnimationInfosActionType.reset,
       payload: {
@@ -23,7 +29,35 @@ const Visualizer = () => {
             },
       },
     });
+  };
+
+  const cleanAnimationAction = () => {
+    dispatchActionInfos({
+      type: ActionInfosActionType.set_action,
+      payload: { animationAction: null },
+    });
+  };
+
+  useLayoutEffect(() => {
+    resetMatrix();
   }, []);
+
+  useEffect(() => {
+    const { animationAction } = actionInfos;
+
+    if (animationAction) {
+      switch (animationAction.key) {
+        case AnimationActionType.play:
+          break;
+        case AnimationActionType.pause:
+          break;
+        case AnimationActionType.reset:
+          resetMatrix();
+          break;
+      }
+      cleanAnimationAction();
+    }
+  }, [actionInfos.animationAction]);
 
   return (
     <div className="flex justify-center items-center h-full w-full" ref={ref}>

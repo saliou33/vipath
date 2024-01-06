@@ -28,7 +28,6 @@ const Dropdown = ({ name, items, handleClick }: PropsType) => {
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -45,7 +44,7 @@ const Dropdown = ({ name, items, handleClick }: PropsType) => {
       </button>
 
       {isOpen && (
-        <ul className="absolute rounded-sm bg-slate-300 bg-opacity-90 flex flex-col translate-y-2 min-w-fit max-w-24 w-full">
+        <ul className="absolute z-[300] rounded-sm bg-slate-300 bg-opacity-90 flex flex-col translate-y-2 min-w-fit max-w-24 w-full">
           {items.map((item, key) => (
             <li
               key={key}

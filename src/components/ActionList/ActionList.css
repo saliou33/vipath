@@ -1,11 +1,14 @@
 .play {
   fill: theme("colors.green.200");
+  font-size: 2rem;
 }
 
 .pause {
   fill: theme("colors.red.200");
+  font-size: 2rem;
 }
 
 .reset {
   fill: theme("colors.blue.200");
+  font-size: 1.5rem;
 }

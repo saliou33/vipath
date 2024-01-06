@@ -47,7 +47,7 @@ const PointerIndicator = ({ parentRef }: PropsType) => {
   return (
     show && (
       <div
-        className="absolute"
+        className="absolute z-[999]"
         ref={ref}
         style={{ left: coord[0] + "px", top: coord[1] + "px" }}
       >
