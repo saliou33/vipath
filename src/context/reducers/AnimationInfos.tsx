@@ -2,6 +2,7 @@ import {
   AnimationArrayType,
   AnimationType,
   ArrayCoordType,
+  CoordType,
   GridMatrixType,
   GridNodeIndexedArrayType,
   GridNodeType,
@@ -40,6 +41,8 @@ export type AnimationInfosAction =
 export interface AnimationInfos {
   cols: number;
   rows: number;
+  startCoord: CoordType;
+  goalCoord: CoordType;
   matrix: GridMatrixType | null;
   animations: AnimationArrayType | null;
   shortestPath: ArrayCoordType | null;
@@ -51,6 +54,8 @@ export interface AnimationInfos {
 export const initialAnimationsInfos: AnimationInfos = {
   cols: Infinity,
   rows: Infinity,
+  startCoord: [0, 0],
+  goalCoord: [0, 0],
   matrix: [],
   animations: [],
   shortestPath: [],
@@ -156,5 +161,7 @@ const reset = (animationInfos: AnimationInfos) => {
     isRunning: false,
     cols: newCols,
     rows: newRows,
+    startCoord: [rowStart, colStart] as CoordType,
+    goalCoord: [rowGoal, colGoal] as CoordType,
   };
 };
