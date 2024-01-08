@@ -11,7 +11,7 @@ import Grid from "../Grid/Grid";
 import PointerIndicator from "../PointerIndicator/PointerIndicator";
 import { AlgoType, AnimationActionType } from "../../utils/contant";
 import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
-import { bfs, dfs } from "../../algorithms";
+import { bfs, dfs, djikstra } from "../../algorithms";
 import { ArrayGridNode, GridMatrix } from "../../utils/interface";
 
 const Visualizer = () => {
@@ -101,6 +101,12 @@ const Visualizer = () => {
             case AlgoType.dfs:
               playAnimation(
                 dfs(matrix as GridMatrix, startCoord, endCoord, rows, cols)
+              );
+              break;
+
+            case AlgoType.djikstra:
+              playAnimation(
+                djikstra(matrix as GridMatrix, startCoord, endCoord, rows, cols)
               );
               break;
           }

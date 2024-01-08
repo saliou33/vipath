@@ -19,7 +19,7 @@ export enum PointerType {
 }
 
 export enum AlgoType {
-  djikstras,
+  djikstra,
   greedy,
   swarm,
   convergent_swarm,
@@ -67,10 +67,7 @@ export class ItemList extends Map<ItemListKeyType, ItemType> {
 }
 
 export const algorithms: ItemList = new ItemList([
-  [
-    AlgoType.djikstras,
-    { key: AlgoType.djikstras, name: "Djikstra's Algorithm" },
-  ],
+  [AlgoType.djikstra, { key: AlgoType.djikstra, name: "Djikstra's Algorithm" }],
   [AlgoType.greedy, { key: AlgoType.greedy, name: "Greedy Algorithm" }],
   [AlgoType.swarm, { key: AlgoType.swarm, name: "Swarm" }],
   [AlgoType.bfs, { key: AlgoType.bfs, name: "Breadth-first Search" }],
