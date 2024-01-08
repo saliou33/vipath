@@ -10,5 +10,12 @@
 
 .reset {
   fill: theme("colors.blue.200");
-  font-size: 1.5rem;
+  font-size: 1.4rem;
+  margin-left: 0.6rem;
+}
+
+.clear {
+  fill: theme("colors.slate.100");
+  font-size: 1.4rem;
+  margin-left: 0.6rem;
 }

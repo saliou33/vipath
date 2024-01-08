@@ -47,7 +47,13 @@ const Visualizer = () => {
     });
   };
 
-  const cleanAnimationAction = () => {
+  const clearAnimation = () => {
+    dispatchAnimationInfos({
+      type: AnimationInfosActionType.clear,
+    });
+  };
+
+  const cleanAction = () => {
     dispatchActionInfos({
       type: ActionInfosActionType.set_action,
       payload: { animationAction: null },
@@ -60,18 +66,31 @@ const Visualizer = () => {
     });
   };
 
+  const runAnimation = () => {
+    dispatchAnimationInfos({
+      type: AnimationInfosActionType.run,
+    });
+  };
+
+  // initializer
   useLayoutEffect(() => {
     resetMatrix();
   }, []);
 
-  // useEffect for handling action
+  // effect for handling nav action
   useEffect(() => {
     const { animationAction, selectedAlgo } = actionInfos;
-    const { matrix, startCoord, endCoord, rows, cols } = animationInfos;
+    const { matrix, animations, startCoord, endCoord, rows, cols } =
+      animationInfos;
 
     if (animationAction) {
       switch (animationAction.key) {
         case AnimationActionType.play:
+          if (animations && animations?.length > 0) {
+            runAnimation();
+            return;
+          }
+
           switch (selectedAlgo.key) {
             case AlgoType.bfs:
               playAnimation(
@@ -82,17 +101,23 @@ const Visualizer = () => {
         case AnimationActionType.pause:
           pauseAnimation();
           break;
+
+        case AnimationActionType.clear:
+          clearAnimation();
+          break;
+
         case AnimationActionType.reset:
           resetMatrix();
           break;
       }
-      cleanAnimationAction();
+      cleanAction();
     }
   }, [actionInfos.animationAction]);
 
-  // useEffect for running animation
+  // effects for running animation | loop
   useEffect(() => {
     const { cursor, speed, animations, isRunning } = animationInfos;
+
     if (isRunning && animations && cursor < animations.length) {
       dispatchAnimationInfos({
         type: AnimationInfosActionType.animate,

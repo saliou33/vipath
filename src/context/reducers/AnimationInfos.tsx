@@ -9,10 +9,12 @@ import {
 // action
 export enum AnimationInfosActionType {
   play,
+  run,
   pause,
   view,
   random,
   reset,
+  clear,
   update,
   speed,
   nodeSize,
@@ -24,7 +26,10 @@ export type AnimationInfosAction =
       payload: Array<ArrayGridNode>;
     }
   | {
-      type: AnimationInfosActionType.pause;
+      type:
+        | AnimationInfosActionType.pause
+        | AnimationInfosActionType.run
+        | AnimationInfosActionType.clear;
     }
   | {
       type: AnimationInfosActionType.reset;
@@ -77,28 +82,43 @@ export const animationInfosReducer = (
   switch (action.type) {
     case AnimationInfosActionType.reset:
       return reset(action.payload);
+
     case AnimationInfosActionType.update:
       return update(animationInfos, action.payload);
+
     case AnimationInfosActionType.animate:
       return {
         ...update(animationInfos, action.payload.nodes),
         cursor: action.payload.cursor,
       };
+
     case AnimationInfosActionType.speed:
       return { ...animationInfos };
+
     case AnimationInfosActionType.view:
       return { ...animationInfos };
+
     case AnimationInfosActionType.play:
       return {
         ...animationInfos,
         animations: action.payload,
         isRunning: true,
       };
+
     case AnimationInfosActionType.pause:
       return {
         ...animationInfos,
         isRunning: false,
       };
+
+    case AnimationInfosActionType.run:
+      return {
+        ...animationInfos,
+        isRunning: true,
+      };
+
+    case AnimationInfosActionType.clear:
+      return clear(animationInfos);
   }
 
   return animationInfos;
@@ -109,11 +129,28 @@ const update = (animationInfos: AnimationInfos, nodes: ArrayGridNode) => {
 
   if (matrix) {
     nodes.forEach((node) => {
-      matrix[node.coord.row][node.coord.col] = node;
+      matrix[node.coord.row][node.coord.col] = { ...node };
     });
   }
 
   return { ...animationInfos, matrix };
+};
+
+const clear = (animationInfos: AnimationInfos) => {
+  const { cols, rows, matrix } = animationInfos;
+
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (matrix) matrix[i][j].class = "";
+    }
+  }
+
+  return {
+    ...animationInfos,
+    matrix,
+    cursor: 0,
+    isRunning: false,
+  };
 };
 
 const reset = (animationInfos: AnimationInfos) => {

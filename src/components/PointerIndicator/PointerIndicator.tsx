@@ -45,9 +45,7 @@ const PointerIndicator = ({ parentRef }: PropsType) => {
         ref={ref}
         style={{ left: coord[0] + "px", top: coord[1] + "px" }}
       >
-        {selectedPointer?.icon && (
-          <selectedPointer.icon className="text-[0.5rem]" />
-        )}
+        {selectedPointer?.icon && <selectedPointer.icon />}
       </div>
     )
   );

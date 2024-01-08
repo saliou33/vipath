@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { IconType } from "react-icons";
 import {
+  BiBlock,
   BiCircle,
   BiDumbbell,
   BiPause,
@@ -35,7 +36,7 @@ export enum PatternType {
 export enum AnimationActionType {
   play = "play",
   pause = "pause",
-  resume = "resume",
+  clear = "clear",
   reset = "reset",
 }
 
@@ -113,6 +114,15 @@ export const actions: ItemList = new ItemList([
       name: "reset",
       icon: BiReset,
       class: AnimationActionType.reset,
+    },
+  ],
+  [
+    AnimationActionType.clear,
+    {
+      key: AnimationActionType.clear,
+      name: "clear",
+      icon: BiBlock,
+      class: AnimationActionType.clear,
     },
   ],
 ]);
