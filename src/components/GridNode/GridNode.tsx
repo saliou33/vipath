@@ -106,7 +106,6 @@ const GridNode = ({
           <BiDollarCircle />
         ) : null}
       </span>
-      g
     </div>
   );
 };

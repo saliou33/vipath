@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { Context, ContextValueType } from "../../context/context";
-import GridNode from "../GridItem/GridNode";
+import GridNode from "../GridNode/GridNode";
 
 const Grid = () => {
   const { animationInfos, actionInfos, dispatchAnimationInfos } =
