@@ -56,17 +56,17 @@ svg {
   height: 100%;
   z-index: 100;
 }
-/* 
+
 .node::after {
   animation: bubble 1s ease-out;
   animation-fill-mode: forwards;
-} */
+}
 
-.node::after {
+/* .node::after {
   animation: shimmer-radial 1s ease-out;
   animation-fill-mode: forwards;
   background: var(--radial);
-}
+} */
 
 .path::after {
   background-color: theme("colors.purple.400");
