@@ -1,16 +1,11 @@
-export type CoordType = [number, number];
-export type GridMatrixType = Array<Array<IGridNode>>;
-export type AnimationArrayType = Array<IAnimation>;
-export type ArrayCoordType = Array<CoordType>;
-export type ViewType = IView;
-export type AnimationType = IAnimation;
-export type GridNodeIndexedArrayType = Array<{
-  index: CoordType;
-  node: IGridNode;
-}>;
+export type Coord = { row: number; col: number };
+export type GridMatrix = Array<Array<IGridNode>>;
+export type ArrayCoord = Array<Coord>;
+export type ArrayGridNode = Array<IGridNode>;
+export type ViewDetails = IView;
 
 export enum GridNodeType {
-  goal = "goal",
+  end = "end",
   start = "start",
   weight = "weight",
   bridge = "bridge",
@@ -20,16 +15,12 @@ export enum GridNodeType {
 
 export interface IGridNode {
   type: GridNodeType;
+  coord: Coord;
   weight: number;
   distance: number;
   isVisited: boolean;
-  parent: CoordType | null; // coordinates of the parent array used to generate path
+  parent: Coord | null; // coordinates of the parent array used to generate path
   class: string;
-}
-
-export interface IAnimation {
-  class: string;
-  position: ArrayCoordType;
 }
 
 export interface IView {

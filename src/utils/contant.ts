@@ -8,6 +8,7 @@ import {
   BiReset,
   BiSolidRectangle,
 } from "react-icons/bi";
+import { Coord, GridMatrix } from "./interface";
 
 export enum PointerType {
   wall = "wall",
@@ -44,10 +45,11 @@ export type ItemListKeyType =
   | PatternType
   | AnimationActionType;
 
+export type ItemFnArgType = Array<string | number | GridMatrix | Coord>;
+
 export type ItemType = {
   key: ItemListKeyType;
   name: string;
-  fn?: () => [];
   icon?: IconType;
   class?: string;
 };

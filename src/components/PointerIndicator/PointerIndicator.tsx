@@ -1,10 +1,4 @@
-import {
-  RefObject,
-  useContext,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useContext, useEffect, useRef, useState } from "react";
 import { Context } from "../../context/context";
 
 type PropsType = {
@@ -20,7 +14,7 @@ const PointerIndicator = ({ parentRef }: PropsType) => {
   const [coord, setCoord] = useState<number[]>([0, 0]);
 
   // style pointer
-  useLayoutEffect(() => {
+  useEffect(() => {
     const current = parentRef.current;
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -47,7 +41,7 @@ const PointerIndicator = ({ parentRef }: PropsType) => {
   return (
     show && (
       <div
-        className="absolute z-[999]"
+        className="absolute z-[9999]"
         ref={ref}
         style={{ left: coord[0] + "px", top: coord[1] + "px" }}
       >

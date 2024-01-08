@@ -1,13 +1,22 @@
-import { useContext, useEffect, useLayoutEffect, useRef } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { Context, ContextValueType } from "../../context/context";
 import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
 import Grid from "../Grid/Grid";
 import PointerIndicator from "../PointerIndicator/PointerIndicator";
-import { AnimationActionType } from "../../utils/contant";
+import { AlgoType, AnimationActionType } from "../../utils/contant";
 import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
+import { bfs } from "../../algorithms";
+import { ArrayGridNode, GridMatrix } from "../../utils/interface";
 
 const Visualizer = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const [step, setStep] = useState<number>(0);
 
   const {
     animationInfos,
@@ -31,6 +40,13 @@ const Visualizer = () => {
     });
   };
 
+  const playAnimation = (animations: Array<ArrayGridNode>) => {
+    dispatchAnimationInfos({
+      type: AnimationInfosActionType.play,
+      payload: animations,
+    });
+  };
+
   const cleanAnimationAction = () => {
     dispatchActionInfos({
       type: ActionInfosActionType.set_action,
@@ -38,18 +54,33 @@ const Visualizer = () => {
     });
   };
 
+  const pauseAnimation = () => {
+    dispatchAnimationInfos({
+      type: AnimationInfosActionType.pause,
+    });
+  };
+
   useLayoutEffect(() => {
     resetMatrix();
   }, []);
 
+  // useEffect for handling action
   useEffect(() => {
-    const { animationAction } = actionInfos;
+    const { animationAction, selectedAlgo } = actionInfos;
+    const { matrix, startCoord, endCoord, rows, cols } = animationInfos;
 
     if (animationAction) {
       switch (animationAction.key) {
         case AnimationActionType.play:
+          switch (selectedAlgo.key) {
+            case AlgoType.bfs:
+              playAnimation(
+                bfs(matrix as GridMatrix, startCoord, endCoord, rows, cols)
+              );
+          }
           break;
         case AnimationActionType.pause:
+          pauseAnimation();
           break;
         case AnimationActionType.reset:
           resetMatrix();
@@ -58,6 +89,27 @@ const Visualizer = () => {
       cleanAnimationAction();
     }
   }, [actionInfos.animationAction]);
+
+  // useEffect for running animation
+  useEffect(() => {
+    const { cursor, speed, animations, isRunning } = animationInfos;
+    if (isRunning && animations && cursor < animations.length) {
+      dispatchAnimationInfos({
+        type: AnimationInfosActionType.animate,
+        payload: {
+          nodes: animations[cursor],
+          cursor: cursor + 1,
+        },
+      });
+
+      // animation loop
+      if (speed > 5) {
+        setTimeout(() => setStep(cursor + 1), speed);
+      } else {
+        setStep(cursor + 1);
+      }
+    }
+  }, [animationInfos.isRunning, step]);
 
   return (
     <div className="flex justify-center items-center h-full w-full" ref={ref}>

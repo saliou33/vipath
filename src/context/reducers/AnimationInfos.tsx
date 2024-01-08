@@ -1,17 +1,15 @@
 import {
-  AnimationArrayType,
-  AnimationType,
-  ArrayCoordType,
-  CoordType,
-  GridMatrixType,
-  GridNodeIndexedArrayType,
+  ArrayGridNode,
+  Coord,
+  GridMatrix,
   GridNodeType,
-  ViewType,
+  ViewDetails,
 } from "../../utils/interface";
 
 // action
 export enum AnimationInfosActionType {
-  run,
+  play,
+  pause,
   view,
   random,
   reset,
@@ -22,7 +20,11 @@ export enum AnimationInfosActionType {
 }
 export type AnimationInfosAction =
   | {
-      type: AnimationInfosActionType.run;
+      type: AnimationInfosActionType.play;
+      payload: Array<ArrayGridNode>;
+    }
+  | {
+      type: AnimationInfosActionType.pause;
     }
   | {
       type: AnimationInfosActionType.reset;
@@ -30,39 +32,42 @@ export type AnimationInfosAction =
     }
   | {
       type: AnimationInfosActionType.update;
-      payload: GridNodeIndexedArrayType;
+      payload: ArrayGridNode;
+    }
+  | {
+      type: AnimationInfosActionType.animate;
+      payload: { nodes: ArrayGridNode; cursor: number };
     }
   | { type: AnimationInfosActionType.nodeSize; payload: { nodeSize: number } }
-  | { type: AnimationInfosActionType.view; payload: ViewType }
-  | { type: AnimationInfosActionType.speed; payload: { speed: number } }
-  | { type: AnimationInfosActionType.animate; payload: AnimationType };
+  | { type: AnimationInfosActionType.view; payload: ViewDetails }
+  | { type: AnimationInfosActionType.speed; payload: { speed: number } };
 
 // state
 export interface AnimationInfos {
   cols: number;
   rows: number;
-  startCoord: CoordType;
-  goalCoord: CoordType;
-  matrix: GridMatrixType | null;
-  animations: AnimationArrayType | null;
-  shortestPath: ArrayCoordType | null;
-  view: ViewType;
+  startCoord: Coord;
+  endCoord: Coord;
+  matrix: GridMatrix | null;
+  view: ViewDetails;
   nodeSize: number;
+  animations: Array<ArrayGridNode> | null;
+  cursor: number;
   isRunning: boolean;
   speed: number;
 }
 export const initialAnimationsInfos: AnimationInfos = {
   cols: Infinity,
   rows: Infinity,
-  startCoord: [0, 0],
-  goalCoord: [0, 0],
+  startCoord: { row: 0, col: 0 },
+  endCoord: { row: 0, col: 0 },
   matrix: [],
-  animations: [],
-  shortestPath: [],
   nodeSize: 30,
   view: { height: 0, width: 0 },
+  speed: 10,
+  animations: [],
   isRunning: false,
-  speed: 100,
+  cursor: 0,
 };
 
 export const animationInfosReducer = (
@@ -74,28 +79,37 @@ export const animationInfosReducer = (
       return reset(action.payload);
     case AnimationInfosActionType.update:
       return update(animationInfos, action.payload);
+    case AnimationInfosActionType.animate:
+      return {
+        ...update(animationInfos, action.payload.nodes),
+        cursor: action.payload.cursor,
+      };
     case AnimationInfosActionType.speed:
       return { ...animationInfos };
     case AnimationInfosActionType.view:
       return { ...animationInfos };
-    case AnimationInfosActionType.run:
-      return { ...animationInfos };
-    case AnimationInfosActionType.animate:
-      return { ...animationInfos };
+    case AnimationInfosActionType.play:
+      return {
+        ...animationInfos,
+        animations: action.payload,
+        isRunning: true,
+      };
+    case AnimationInfosActionType.pause:
+      return {
+        ...animationInfos,
+        isRunning: false,
+      };
   }
 
   return animationInfos;
 };
 
-const update = (
-  animationInfos: AnimationInfos,
-  nodes: GridNodeIndexedArrayType
-) => {
+const update = (animationInfos: AnimationInfos, nodes: ArrayGridNode) => {
   const { matrix } = animationInfos;
 
   if (matrix) {
-    nodes.forEach(({ index, node }) => {
-      matrix[index[0]][index[1]] = node;
+    nodes.forEach((node) => {
+      matrix[node.coord.row][node.coord.col] = node;
     });
   }
 
@@ -106,14 +120,15 @@ const reset = (animationInfos: AnimationInfos) => {
   const { cols, rows, nodeSize, view } = animationInfos;
 
   // fn to create matrix
-  const createMatrix = (cols: number, rows: number): GridMatrixType => {
-    const matrix: GridMatrixType = [...Array.from({ length: rows }, () => [])];
+  const createMatrix = (cols: number, rows: number): GridMatrix => {
+    const matrix: GridMatrix = [...Array.from({ length: rows }, () => [])];
 
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         matrix[i].push({
           type: GridNodeType.blank,
-          weight: 1,
+          coord: { row: i, col: j },
+          weight: 0,
           distance: Infinity,
           isVisited: false,
           parent: null, // coordinates of the parent array used to generate path
@@ -132,7 +147,7 @@ const reset = (animationInfos: AnimationInfos) => {
 
   // TODO: handle pattern type
 
-  // add start node and goal node
+  // add start node and end node
   const [colStart, colGoal] = [
     Math.floor(newCols / 6),
     Math.floor(newCols - newCols / 6),
@@ -151,7 +166,7 @@ const reset = (animationInfos: AnimationInfos) => {
 
   matrix[rowGoal][colGoal] = {
     ...matrix[rowGoal][colGoal],
-    type: GridNodeType.goal,
+    type: GridNodeType.end,
   };
 
   return {
@@ -161,7 +176,9 @@ const reset = (animationInfos: AnimationInfos) => {
     isRunning: false,
     cols: newCols,
     rows: newRows,
-    startCoord: [rowStart, colStart] as CoordType,
-    goalCoord: [rowGoal, colGoal] as CoordType,
+    startCoord: { row: rowStart, col: colStart },
+    endCoord: { row: rowGoal, col: colGoal },
+    cursor: 0,
+    animations: [],
   };
 };

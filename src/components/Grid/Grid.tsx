@@ -22,7 +22,6 @@ const Grid = () => {
           row.map((node, j) => (
             <GridNode
               key={`${i}-${j}`}
-              coord={[i, j]}
               pointer={actionInfos.selectedPointer}
               node={node}
               isDrawing={isDrawing}

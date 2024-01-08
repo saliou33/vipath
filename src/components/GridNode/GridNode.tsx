@@ -5,17 +5,11 @@ import {
   AnimationInfosActionType,
 } from "../../context/reducers/AnimationInfos";
 import { ItemType } from "../../utils/contant";
-import {
-  CoordType,
-  GridNodeIndexedArrayType,
-  GridNodeType,
-  IGridNode,
-} from "../../utils/interface";
+import { ArrayGridNode, GridNodeType, IGridNode } from "../../utils/interface";
 import "./GridNode.css";
 
 type PropsType = {
   node: IGridNode;
-  coord: CoordType;
   isDrawing: boolean;
   setIsDrawing: Dispatch<SetStateAction<boolean>>;
   pointer: ItemType;
@@ -24,14 +18,14 @@ type PropsType = {
 
 const GridNode = ({
   node,
-  coord,
   pointer,
   isDrawing,
   setIsDrawing,
   dispatch,
 }: PropsType) => {
   const ref = useRef<HTMLDivElement>(null);
-  const updateValues = (values: GridNodeIndexedArrayType) => {
+
+  const updateValues = (values: ArrayGridNode) => {
     dispatch({ type: AnimationInfosActionType.update, payload: values });
   };
 
@@ -42,15 +36,7 @@ const GridNode = ({
     const type = node.type != pointerType ? pointerType : GridNodeType.blank;
 
     if (type != node.type) {
-      updateValues([
-        {
-          index: coord,
-          node: {
-            ...node,
-            type,
-          },
-        },
-      ]);
+      updateValues([{ ...node, type }]);
     }
   };
 
@@ -75,7 +61,7 @@ const GridNode = ({
     const current = ref.current;
 
     //make sure that the edge node are immutable
-    if (node.type == GridNodeType.goal || node.type == GridNodeType.start)
+    if (node.type == GridNodeType.end || node.type == GridNodeType.start)
       return () => [];
 
     if (current) {
@@ -94,13 +80,13 @@ const GridNode = ({
   });
 
   return (
-    <div ref={ref} className={`grid-node ${node.type}`}>
+    <div ref={ref} className={`grid-node ${node.type} ${node.class}`}>
       <span className="z-[700]">
         {node.type == GridNodeType.start ? (
           <BiCool />
         ) : node.type == GridNodeType.weight ? (
           <BiDumbbell />
-        ) : node.type == GridNodeType.goal ? (
+        ) : node.type == GridNodeType.end ? (
           <BiMap />
         ) : node.type == GridNodeType.bridge ? (
           <BiDollarCircle />
