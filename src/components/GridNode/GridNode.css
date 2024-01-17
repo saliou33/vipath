@@ -2,11 +2,11 @@
   --radial: radial-gradient(
     circle,
     theme("colors.slate.100") 0%,
-    theme("colors.blue.100") 30%,
     theme("colors.blue.300") 30%,
-    theme("colors.blue.300") 60%,
-    theme("colors.blue.100") 30%,
-    theme("colors.slate.100") 100%
+    theme("colors.slate.700") 30%,
+    theme("colors.slate.700") 60%,
+    theme("colors.blue.300") 30%,
+    theme("colors.blue.100") 100%
   );
   --linear: linear-gradient(
     90deg,
@@ -58,8 +58,9 @@ svg {
 }
 
 .node::after {
-  animation: bubble 1s ease-out;
+  animation: zoom 0.5s ease-in;
   animation-fill-mode: forwards;
+  background: var(--radial);
 }
 
 /* .node::after {
@@ -69,11 +70,7 @@ svg {
 } */
 
 .path::after {
-  background-color: theme("colors.purple.400");
-}
-
-.path svg {
-  fill: theme("colors.slate.100");
+  background-color: theme("colors.yellow.200");
 }
 
 @keyframes bubble {
@@ -102,7 +99,7 @@ svg {
   }
 }
 
-@keyframes shimmer-linear {
+@keyframes shimmer {
   0% {
     background-position: -20rem 0;
   }
@@ -111,13 +108,13 @@ svg {
   }
 }
 
-@keyframes shimmer-radial {
+@keyframes zoom {
   0% {
     background-size: 0% 0%;
     background-position: center;
   }
   100% {
-    background-size: 200% 200%;
+    background-size: 50% 50%;
     background-position: center;
   }
 }

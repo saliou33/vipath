@@ -69,7 +69,7 @@ export const initialAnimationsInfos: AnimationInfos = {
   matrix: [],
   nodeSize: 30,
   view: { height: 0, width: 0 },
-  speed: 10,
+  speed: 0,
   animations: [],
   isRunning: false,
   cursor: 0,

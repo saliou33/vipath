@@ -41,7 +41,7 @@ export interface ActionInfos {
 }
 
 export const initialActionInfos: ActionInfos = {
-  selectedAlgo: algorithms.get(AlgoType.djikstras) as ItemType,
+  selectedAlgo: algorithms.get(AlgoType.djikstra) as ItemType,
   selectedPointer: pointers.get(PointerType.blank) as ItemType,
   selectedPattern: patterns.get(PatternType.blank) as ItemType,
   animationAction: null,
