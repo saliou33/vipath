@@ -1,6 +1,6 @@
 import {
+  AnimationMatrix,
   ArrayCoord,
-  ArrayGridNode,
   Coord,
   GridMatrix,
   GridNodeType,
@@ -9,24 +9,22 @@ import { Matrix } from "./matrix";
 
 export const bfs = (
   gridMatrix: GridMatrix,
+  animationMatrix: AnimationMatrix,
   start: Coord,
   end: Coord,
   rows: number,
   cols: number
 ) => {
-  const matrix = new Matrix(gridMatrix, rows, cols);
+  const matrix = new Matrix(gridMatrix, animationMatrix, rows, cols);
   const queue: ArrayCoord = [start];
-  const animationArray = [];
+  let step = 1;
 
   while (queue.length > 0) {
     const { row, col } = queue.shift() as Coord;
 
     if (row === end.row && col === end.col) {
-      return [...animationArray, ...matrix.path(start, end)];
+      return matrix.animation(start, end, step);
     }
-
-    // animate unvisited neighbors
-    const unvisitedNeighbors: ArrayGridNode = [];
 
     const neighbors = matrix.getNeighbors(row, col);
     for (const neighbor of neighbors) {
@@ -38,16 +36,15 @@ export const bfs = (
         node.distance = node.distance + 1;
         queue.push(neighbor);
 
-        unvisitedNeighbors.push({
-          ...node,
-          class: "play node",
-        });
+        if (node.type != GridNodeType.start && node.type != GridNodeType.end) {
+          matrix.animationMatrix[node.coord.row][node.coord.col] = {
+            coord: node.coord,
+            step: step,
+          };
+        }
       }
     }
-
-    if (unvisitedNeighbors.length > 0) {
-      animationArray.push(unvisitedNeighbors);
-    }
+    step++;
   }
 
   return [];

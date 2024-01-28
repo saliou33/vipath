@@ -1,4 +1,5 @@
 import {
+  AnimationMatrix,
   ArrayGridNode,
   Coord,
   GridMatrix,
@@ -23,7 +24,7 @@ export enum AnimationInfosActionType {
 export type AnimationInfosAction =
   | {
       type: AnimationInfosActionType.play;
-      payload: Array<ArrayGridNode>;
+      payload: AnimationMatrix;
     }
   | {
       type:
@@ -56,7 +57,7 @@ export interface AnimationInfos {
   matrix: GridMatrix | null;
   view: ViewDetails;
   nodeSize: number;
-  animations: Array<ArrayGridNode> | null;
+  animations: AnimationMatrix;
   cursor: number;
   isRunning: boolean;
   speed: number;
@@ -69,7 +70,7 @@ export const initialAnimationsInfos: AnimationInfos = {
   matrix: [],
   nodeSize: 30,
   view: { height: 0, width: 0 },
-  speed: 0,
+  speed: 10,
   animations: [],
   isRunning: false,
   cursor: 0,
@@ -137,17 +138,8 @@ const update = (animationInfos: AnimationInfos, nodes: ArrayGridNode) => {
 };
 
 const clear = (animationInfos: AnimationInfos) => {
-  const { cols, rows, matrix } = animationInfos;
-
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      if (matrix) matrix[i][j].class = "";
-    }
-  }
-
   return {
     ...animationInfos,
-    matrix,
     cursor: 0,
     isRunning: false,
   };
@@ -157,8 +149,14 @@ const reset = (animationInfos: AnimationInfos) => {
   const { cols, rows, nodeSize, view } = animationInfos;
 
   // fn to create matrix
-  const createMatrix = (cols: number, rows: number): GridMatrix => {
+  const createMatrix = (
+    cols: number,
+    rows: number
+  ): [GridMatrix, AnimationMatrix] => {
     const matrix: GridMatrix = [...Array.from({ length: rows }, () => [])];
+    const animations: AnimationMatrix = [
+      ...Array.from({ length: rows }, () => []),
+    ];
 
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
@@ -169,18 +167,22 @@ const reset = (animationInfos: AnimationInfos) => {
           distance: Infinity,
           isVisited: false,
           parent: null, // coordinates of the parent array used to generate path
-          class: "",
+        });
+
+        animations[i].push({
+          step: 0,
+          coord: { row: i, col: j },
         });
       }
     }
 
-    return matrix;
+    return [matrix, animations];
   };
 
   // create the blank matrix
   const newCols = cols == Infinity ? Math.floor(view?.width / nodeSize) : cols;
   const newRows = rows == Infinity ? Math.floor(view?.height / nodeSize) : rows;
-  const matrix = createMatrix(newCols, newRows);
+  const [matrix, animations] = createMatrix(newCols, newRows);
 
   // TODO: handle pattern type
 
@@ -209,13 +211,12 @@ const reset = (animationInfos: AnimationInfos) => {
   return {
     ...animationInfos,
     matrix,
+    animations,
     shortestPath: [],
     isRunning: false,
     cols: newCols,
     rows: newRows,
     startCoord: { row: rowStart, col: colStart },
     endCoord: { row: rowGoal, col: colGoal },
-    cursor: 0,
-    animations: [],
   };
 };

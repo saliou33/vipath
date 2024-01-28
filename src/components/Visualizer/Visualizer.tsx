@@ -1,10 +1,4 @@
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import { Context, ContextValueType } from "../../context/context";
 import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
 import Grid from "../Grid/Grid";
@@ -12,11 +6,10 @@ import PointerIndicator from "../PointerIndicator/PointerIndicator";
 import { AlgoType, AnimationActionType } from "../../utils/contant";
 import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
 import { bfs, dfs, djikstra } from "../../algorithms";
-import { ArrayGridNode, GridMatrix } from "../../utils/interface";
+import { AnimationMatrix, GridMatrix } from "../../utils/interface";
 
 const Visualizer = () => {
   const ref = useRef<HTMLDivElement>(null);
-  const [step, setStep] = useState<number>(0);
 
   const {
     animationInfos,
@@ -24,6 +17,10 @@ const Visualizer = () => {
     dispatchAnimationInfos,
     dispatchActionInfos,
   } = useContext<ContextValueType>(Context);
+
+  const { matrix, animations, startCoord, endCoord, rows, cols } =
+    animationInfos;
+  const { animationAction, selectedAlgo } = actionInfos;
 
   const resetMatrix = () => {
     dispatchAnimationInfos({
@@ -40,7 +37,7 @@ const Visualizer = () => {
     });
   };
 
-  const playAnimation = (animations: Array<ArrayGridNode>) => {
+  const playAnimation = (animations: AnimationMatrix) => {
     dispatchAnimationInfos({
       type: AnimationInfosActionType.play,
       payload: animations,
@@ -66,11 +63,11 @@ const Visualizer = () => {
     });
   };
 
-  const runAnimation = () => {
-    dispatchAnimationInfos({
-      type: AnimationInfosActionType.run,
-    });
-  };
+  // const runAnimation = () => {
+  //   dispatchAnimationInfos({
+  //     type: AnimationInfosActionType.run,
+  //   });
+  // };
 
   // initializer
   useLayoutEffect(() => {
@@ -79,34 +76,46 @@ const Visualizer = () => {
 
   // effect for handling nav action
   useEffect(() => {
-    const { animationAction, selectedAlgo } = actionInfos;
-    const { matrix, animations, startCoord, endCoord, rows, cols } =
-      animationInfos;
-
     if (animationAction) {
       switch (animationAction.key) {
         case AnimationActionType.play:
-          if (animations && animations?.length > 0) {
-            runAnimation();
-            return;
-          }
-
           switch (selectedAlgo.key) {
             case AlgoType.bfs:
               playAnimation(
-                bfs(matrix as GridMatrix, startCoord, endCoord, rows, cols)
+                bfs(
+                  matrix as GridMatrix,
+                  animations as AnimationMatrix,
+                  startCoord,
+                  endCoord,
+                  rows,
+                  cols
+                )
               );
               break;
 
             case AlgoType.dfs:
               playAnimation(
-                dfs(matrix as GridMatrix, startCoord, endCoord, rows, cols)
+                dfs(
+                  matrix as GridMatrix,
+                  animations as AnimationMatrix,
+                  startCoord,
+                  endCoord,
+                  rows,
+                  cols
+                )
               );
               break;
 
             case AlgoType.djikstra:
               playAnimation(
-                djikstra(matrix as GridMatrix, startCoord, endCoord, rows, cols)
+                djikstra(
+                  matrix as GridMatrix,
+                  animations as AnimationMatrix,
+                  startCoord,
+                  endCoord,
+                  rows,
+                  cols
+                )
               );
               break;
           }
@@ -125,29 +134,7 @@ const Visualizer = () => {
       }
       cleanAction();
     }
-  }, [actionInfos.animationAction]);
-
-  // effects for running animation | loop
-  useEffect(() => {
-    const { cursor, speed, animations, isRunning } = animationInfos;
-
-    if (isRunning && animations && cursor < animations.length) {
-      dispatchAnimationInfos({
-        type: AnimationInfosActionType.animate,
-        payload: {
-          nodes: animations[cursor],
-          cursor: cursor + 1,
-        },
-      });
-
-      // animation loop
-      if (speed > 5) {
-        setTimeout(() => setStep(cursor + 1), speed);
-      } else {
-        setStep(cursor + 1);
-      }
-    }
-  }, [animationInfos.isRunning, step]);
+  }, [animationAction]);
 
   return (
     <div className="flex justify-center items-center h-full w-full" ref={ref}>

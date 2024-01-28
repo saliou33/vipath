@@ -1,29 +1,48 @@
-import { Dispatch, SetStateAction, useLayoutEffect, useRef } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { BiCool, BiDollarCircle, BiDumbbell, BiMap } from "react-icons/bi";
 import {
   AnimationInfosAction,
   AnimationInfosActionType,
 } from "../../context/reducers/AnimationInfos";
 import { ItemType } from "../../utils/contant";
-import { ArrayGridNode, GridNodeType, IGridNode } from "../../utils/interface";
+import {
+  ArrayGridNode,
+  GridNodeType,
+  IAnimationNode,
+  IGridNode,
+} from "../../utils/interface";
 import "./GridNode.css";
 
 type PropsType = {
   node: IGridNode;
   isDrawing: boolean;
   setIsDrawing: Dispatch<SetStateAction<boolean>>;
+  speed: number;
+  animation: IAnimationNode | null;
   pointer: ItemType;
   dispatch: Dispatch<AnimationInfosAction>;
 };
 
 const GridNode = ({
   node,
+  animation,
   pointer,
   isDrawing,
   setIsDrawing,
   dispatch,
+  speed,
 }: PropsType) => {
   const ref = useRef<HTMLDivElement>(null);
+
+  const [classes, setClasses] = useState("");
+
+  const timeouts: number[] = [];
 
   const updateValues = (values: ArrayGridNode) => {
     dispatch({ type: AnimationInfosActionType.update, payload: values });
@@ -79,8 +98,30 @@ const GridNode = ({
     };
   });
 
+  //animation
+  if (animation && animation.step > 0 && !classes) {
+    const updateClasses = (classes: string) => {
+      clearTimeout(timeouts.shift());
+      setClasses(classes);
+    };
+
+    timeouts.push(
+      setTimeout(() => {
+        updateClasses(`play node`);
+      }, speed * animation.step)
+    );
+
+    if (animation.inPath && animation.pathStep) {
+      timeouts.push(
+        setTimeout(() => {
+          updateClasses(`play path`);
+        }, speed * animation.pathStep)
+      );
+    }
+  }
+
   return (
-    <div ref={ref} className={`grid-node ${node.type} ${node.class}`}>
+    <div ref={ref} className={`grid-node ${node.type} ${classes}`}>
       <span className="z-[700]">
         {node.type == GridNodeType.start ? (
           <BiCool />

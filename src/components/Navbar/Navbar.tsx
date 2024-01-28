@@ -4,14 +4,19 @@ import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
 import { ItemType, algorithms, pointers, actions } from "../../utils/contant";
 import Dropdown from "../Dropdown/Dropdown";
 import ActionList from "../ActionList/ActionList";
+import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
 
 const Navbar = () => {
-  const { dispatchActionInfos } = useContext(Context);
+  const { dispatchActionInfos, dispatchAnimationInfos } = useContext(Context);
 
   const handleSelectAlgo = (item: ItemType) => {
     dispatchActionInfos({
       type: ActionInfosActionType.set_algo,
       payload: { selectedAlgo: item },
+    });
+
+    dispatchAnimationInfos({
+      type: AnimationInfosActionType.clear,
     });
   };
 

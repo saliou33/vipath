@@ -5,7 +5,7 @@ import GridNode from "../GridNode/GridNode";
 const Grid = () => {
   const { animationInfos, actionInfos, dispatchAnimationInfos } =
     useContext<ContextValueType>(Context);
-  const { matrix, rows, cols, nodeSize } = animationInfos;
+  const { matrix, rows, cols, nodeSize, animations, speed } = animationInfos;
   const [isDrawing, setIsDrawing] = useState(false);
 
   const gridStyle = {
@@ -23,6 +23,8 @@ const Grid = () => {
             <GridNode
               key={`${i}-${j}`}
               pointer={actionInfos.selectedPointer}
+              animation={animations && animations[i][j]}
+              speed={speed}
               node={node}
               isDrawing={isDrawing}
               setIsDrawing={setIsDrawing}

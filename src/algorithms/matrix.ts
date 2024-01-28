@@ -1,6 +1,6 @@
 import {
+  AnimationMatrix,
   ArrayCoord,
-  ArrayGridNode,
   Coord,
   GridMatrix,
   IGridNode,
@@ -10,11 +10,18 @@ export class Matrix {
   rows: number;
   cols: number;
   gridMatrix: GridMatrix;
+  animationMatrix: AnimationMatrix;
 
-  constructor(gridMatrix: GridMatrix, rows: number, cols: number) {
+  constructor(
+    gridMatrix: GridMatrix,
+    animationMatrix: AnimationMatrix,
+    rows: number,
+    cols: number
+  ) {
     this.rows = rows;
     this.cols = cols;
     this.gridMatrix = gridMatrix;
+    this.animationMatrix = animationMatrix;
   }
 
   setCell(row: number, col: number, value: IGridNode) {
@@ -64,15 +71,18 @@ export class Matrix {
     return path;
   }
 
-  path(start: Coord, end: Coord): Array<ArrayGridNode> {
-    const nodes = [];
+  animation(start: Coord, end: Coord, maxStep: number) {
     const shortesPath = this.reconstructPath(start, end);
 
+    let j = 0;
     for (const coord of shortesPath) {
-      const node = this.getCell(coord.row, coord.col);
-      nodes.push([{ ...node, class: "play path" }]);
+      this.animationMatrix[coord.row][coord.col] = {
+        ...this.animationMatrix[coord.row][coord.col],
+        inPath: true,
+        pathStep: maxStep + j++,
+      };
     }
 
-    return nodes;
+    return this.animationMatrix;
   }
 }

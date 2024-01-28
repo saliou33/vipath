@@ -1,5 +1,5 @@
 import {
-  ArrayGridNode,
+  AnimationMatrix,
   Coord,
   GridMatrix,
   GridNodeType,
@@ -10,16 +10,16 @@ import { PriorityQueue } from "./priorityQueue";
 
 export const djikstra = (
   gridMatrix: GridMatrix,
+  animationMatrix: AnimationMatrix,
   start: Coord,
   end: Coord,
   rows: number,
   cols: number
 ) => {
-  const matrix = new Matrix(gridMatrix, rows, cols);
+  const matrix = new Matrix(gridMatrix, animationMatrix, rows, cols);
   const queue = new PriorityQueue();
   queue.enqueue(matrix.getCell(start.row, start.col));
-
-  const animationArray = [];
+  let step = 1;
 
   while (queue.length() > 0) {
     const currentNode = queue.dequeue() as IGridNode;
@@ -28,11 +28,9 @@ export const djikstra = (
     } = currentNode;
 
     if (row === end.row && col === end.col) {
-      return [...animationArray, ...matrix.path(start, end)];
+      return matrix.animation(start, end, step);
     }
 
-    // animate unvisited neighbors
-    const unvisitedNeighbors: ArrayGridNode = [];
     const neighbors = matrix.getNeighbors(row, col);
 
     for (const neighbor of neighbors) {
@@ -45,17 +43,19 @@ export const djikstra = (
           node.parent = { row, col };
           node.distance = newDistance;
           queue.enqueue(node);
-          unvisitedNeighbors.push({
-            ...node,
-            class: "play node",
-          });
+          if (
+            node.type != GridNodeType.start &&
+            node.type != GridNodeType.end
+          ) {
+            matrix.animationMatrix[node.coord.row][node.coord.col] = {
+              coord: node.coord,
+              step: step,
+            };
+          }
         }
       }
     }
-
-    if (unvisitedNeighbors.length > 0) {
-      animationArray.push(unvisitedNeighbors);
-    }
+    step++;
   }
 
   return [];
