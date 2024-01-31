@@ -1,51 +1,36 @@
-import {
-  AnimationMatrix,
-  ArrayCoord,
-  Coord,
-  GridMatrix,
-  GridNodeType,
-} from "../utils/interface";
-import { Matrix } from "./matrix";
+import { AnimationMatrix, GridMatrix, IGridNode } from "../utils/interface";
+import { Matrix } from "./Matrix";
 
 export const dfs = (
-  gridMatrix: GridMatrix,
-  animationMatrix: AnimationMatrix,
-  start: Coord,
-  end: Coord,
+  grid: GridMatrix,
+  animations: AnimationMatrix,
+  start: IGridNode,
+  end: IGridNode,
   rows: number,
   cols: number
 ) => {
-  const matrix = new Matrix(gridMatrix, animationMatrix, rows, cols);
-  const stack: ArrayCoord = [start];
-  let step = 1;
+  const matrix = new Matrix(grid, animations, rows, cols);
+  const stack: Array<IGridNode> = [start];
 
   while (stack.length > 0) {
-    const { row, col } = stack.pop() as Coord;
+    const current = stack.pop() as IGridNode;
 
-    if (row === end.row && col === end.col) {
-      return matrix.animation(start, end, step);
+    if (matrix.eq(current, end)) {
+      return matrix.animate(start, end);
     }
 
-    const neighbors = matrix.getNeighbors(row, col);
+    const neighbors = matrix.getNeighbors(current);
+
     for (const neighbor of neighbors) {
-      const node = matrix.getCell(neighbor.row, neighbor.col);
-
-      if (!node.isVisited && node.type != GridNodeType.wall) {
-        node.isVisited = true;
-        node.parent = { row, col };
-        node.distance = node.distance + 1;
+      if (!neighbor.visited) {
+        neighbor.visited = true;
+        neighbor.parent = current;
         stack.push(neighbor);
-
-        if (node.type != GridNodeType.start && node.type != GridNodeType.end) {
-          matrix.animationMatrix[node.coord.row][node.coord.col] = {
-            coord: node.coord,
-            step: step,
-          };
-        }
+        matrix.animateStep(neighbor);
       }
     }
 
-    step++;
+    matrix.increment();
   }
 
   return [];

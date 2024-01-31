@@ -1,8 +1,6 @@
 export type Coord = { row: number; col: number };
 export type GridMatrix = Array<Array<IGridNode>>;
 export type AnimationMatrix = Array<Array<IAnimationNode>>;
-export type ArrayCoord = Array<Coord>;
-export type ArrayGridNode = Array<IGridNode>;
 export type ViewDetails = IView;
 
 export enum GridNodeType {
@@ -25,8 +23,9 @@ export interface IGridNode {
   coord: Coord;
   weight: number;
   distance: number;
-  isVisited: boolean;
-  parent: Coord | null; // coordinates of the parent array used to generate path
+  visited: boolean;
+  parent: IGridNode | null;
+  f: number;
 }
 
 export interface IView {

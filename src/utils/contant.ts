@@ -28,6 +28,7 @@ export enum AlgoType {
   bidirectional_swarm,
   bfs,
   dfs,
+  a_star,
 }
 
 export enum PatternType {
@@ -70,10 +71,12 @@ export class ItemList extends Map<ItemListKeyType, ItemType> {
 
 export const algorithms: ItemList = new ItemList([
   [AlgoType.djikstra, { key: AlgoType.djikstra, name: "Djikstra's Algorithm" }],
-  [AlgoType.greedy, { key: AlgoType.greedy, name: "Greedy Algorithm" }],
-  [AlgoType.swarm, { key: AlgoType.swarm, name: "Swarm" }],
   [AlgoType.bfs, { key: AlgoType.bfs, name: "Breadth-first Search" }],
   [AlgoType.dfs, { key: AlgoType.dfs, name: "Depth-first Search" }],
+  [AlgoType.a_star, { key: AlgoType.a_star, name: "A* Search" }],
+
+  [AlgoType.greedy, { key: AlgoType.greedy, name: "Greedy Algorithm" }],
+  [AlgoType.swarm, { key: AlgoType.swarm, name: "Swarm" }],
   [
     AlgoType.convergent_swarm,
     { key: AlgoType.convergent_swarm, name: "Convergent Swarm Algorithm" },

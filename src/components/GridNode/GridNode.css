@@ -91,10 +91,10 @@ svg {
 
 @keyframes shimmer {
   0% {
-    background-position: -20rem 0;
+    background-position: -10rem 0;
   }
   100% {
-    background-position: 0 20rem;
+    background-position: 0 10rem;
   }
 }
 

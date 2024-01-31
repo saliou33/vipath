@@ -1,61 +1,41 @@
-import {
-  AnimationMatrix,
-  Coord,
-  GridMatrix,
-  GridNodeType,
-  IGridNode,
-} from "../utils/interface";
-import { Matrix } from "./matrix";
-import { PriorityQueue } from "./priorityQueue";
+import { AnimationMatrix, GridMatrix, IGridNode } from "../utils/interface";
+import { Matrix } from "./Matrix";
+import { PriorityQueue } from "./PriorityQueue.ts";
 
 export const djikstra = (
-  gridMatrix: GridMatrix,
-  animationMatrix: AnimationMatrix,
-  start: Coord,
-  end: Coord,
+  grid: GridMatrix,
+  animations: AnimationMatrix,
+  start: IGridNode,
+  end: IGridNode,
   rows: number,
   cols: number
 ) => {
-  const matrix = new Matrix(gridMatrix, animationMatrix, rows, cols);
+  const matrix = new Matrix(grid, animations, rows, cols);
   const queue = new PriorityQueue();
-  queue.enqueue(matrix.getCell(start.row, start.col));
-  let step = 1;
+  queue.enqueue(start);
 
   while (queue.length() > 0) {
-    const currentNode = queue.dequeue() as IGridNode;
-    const {
-      coord: { row, col },
-    } = currentNode;
+    const current = queue.dequeue() as IGridNode;
 
-    if (row === end.row && col === end.col) {
-      return matrix.animation(start, end, step);
+    if (matrix.eq(current, end)) {
+      return matrix.animate(start, end);
     }
 
-    const neighbors = matrix.getNeighbors(row, col);
+    const neighbors = matrix.getNeighbors(current);
 
     for (const neighbor of neighbors) {
-      const node = matrix.getCell(neighbor.row, neighbor.col);
-
-      if (!node.isVisited && node.type != GridNodeType.wall) {
-        const newDistance = currentNode.distance + node.weight;
-        if (newDistance < node.distance) {
-          node.isVisited = true;
-          node.parent = { row, col };
-          node.distance = newDistance;
-          queue.enqueue(node);
-          if (
-            node.type != GridNodeType.start &&
-            node.type != GridNodeType.end
-          ) {
-            matrix.animationMatrix[node.coord.row][node.coord.col] = {
-              coord: node.coord,
-              step: step,
-            };
-          }
+      if (!neighbor.visited) {
+        const distance = current.distance + neighbor.weight;
+        if (distance < neighbor.distance) {
+          neighbor.visited = true;
+          neighbor.parent = current;
+          neighbor.distance = distance;
+          queue.enqueue(neighbor);
+          matrix.animateStep(neighbor);
         }
       }
     }
-    step++;
+    matrix.increment();
   }
 
   return [];

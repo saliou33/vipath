@@ -1,7 +1,6 @@
 import {
   AnimationMatrix,
   AnimationState,
-  ArrayGridNode,
   GridMatrix,
   GridNodeType,
   IGridNode,
@@ -34,7 +33,7 @@ export type AnimationInfosAction =
     }
   | {
       type: AnimationInfosActionType.update;
-      payload: ArrayGridNode;
+      payload: Array<IGridNode>;
     }
   | { type: AnimationInfosActionType.nodeSize; payload: { nodeSize: number } }
   | { type: AnimationInfosActionType.view; payload: ViewDetails }
@@ -44,14 +43,14 @@ export type AnimationInfosAction =
 export interface AnimationInfos {
   cols: number;
   rows: number;
+  nodeSize: number;
+  speed: number;
   start: IGridNode;
   end: IGridNode;
   matrix: GridMatrix;
   view: ViewDetails;
-  nodeSize: number;
   animations: AnimationMatrix;
   state: AnimationState;
-  speed: number;
 }
 
 const initialNode = {
@@ -59,8 +58,9 @@ const initialNode = {
   coord: { row: 0, col: 0 },
   weight: 0,
   distance: Infinity,
-  isVisited: false,
+  visited: false,
   parent: null, // coordinates of the parent array used to generate path
+  f: 0,
 };
 
 export const initialAnimationsInfos: AnimationInfos = {
@@ -107,16 +107,13 @@ export const animationInfosReducer = (
       };
 
     case AnimationInfosActionType.clear:
-      return {
-        ...animationInfos,
-        state: AnimationState.none,
-      };
+      return clear(animationInfos);
   }
 
   return animationInfos;
 };
 
-const update = (animationInfos: AnimationInfos, nodes: ArrayGridNode) => {
+const update = (animationInfos: AnimationInfos, nodes: Array<IGridNode>) => {
   const { matrix } = animationInfos;
 
   if (matrix) {
@@ -192,5 +189,28 @@ const reset = (animationInfos: AnimationInfos) => {
     rows: newRows,
     start: matrix[rowStart][colStart],
     end: matrix[rowEnd][colEnd],
+  };
+};
+
+const clear = (animationInfos: AnimationInfos) => {
+  const { rows, cols } = animationInfos;
+
+  const animations: AnimationMatrix = [
+    ...Array.from({ length: rows }, () => []),
+  ];
+
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      animations[i].push({
+        step: 0,
+        coord: { row: i, col: j },
+      });
+    }
+  }
+
+  return {
+    ...animationInfos,
+    animations,
+    state: AnimationState.none,
   };
 };

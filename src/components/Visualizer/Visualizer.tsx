@@ -3,8 +3,8 @@ import { Context, ContextValueType } from "../../context/context";
 import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
 import { AlgoType, AnimationActionType } from "../../utils/contant";
 import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
-import { bfs, dfs, djikstra } from "../../algorithms";
-import { AnimationMatrix, AnimationState } from "../../utils/interface";
+import { a_star, bfs, dfs, djikstra } from "../../algorithms";
+import { AnimationMatrix } from "../../utils/interface";
 import PointerIndicator from "../PointerIndicator/PointerIndicator";
 import Grid from "../Grid/Grid";
 
@@ -18,7 +18,7 @@ const Visualizer = () => {
     dispatchActionInfos,
   } = useContext<ContextValueType>(Context);
 
-  const { matrix, animations, start, end, rows, cols, state } = animationInfos;
+  const { matrix, animations, start, end, rows, cols } = animationInfos;
 
   const { animationAction, selectedAlgo } = actionInfos;
 
@@ -51,16 +51,18 @@ const Visualizer = () => {
   const run = () => {
     switch (selectedAlgo.key) {
       case AlgoType.bfs:
-        play(bfs(matrix, animations, start.coord, end.coord, rows, cols));
+        play(bfs(matrix, animations, start, end, rows, cols));
         break;
 
       case AlgoType.dfs:
-        play(dfs(matrix, animations, start.coord, end.coord, rows, cols));
+        play(dfs(matrix, animations, start, end, rows, cols));
         break;
 
       case AlgoType.djikstra:
-        play(djikstra(matrix, animations, start.coord, end.coord, rows, cols));
+        play(djikstra(matrix, animations, start, end, rows, cols));
         break;
+      case AlgoType.a_star:
+        play(a_star(matrix, animations, start, end, rows, cols));
     }
   };
 

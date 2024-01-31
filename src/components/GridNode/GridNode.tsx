@@ -15,7 +15,6 @@ import { ItemType, NodeIconMap } from "../../utils/contant";
 
 import {
   AnimationState,
-  ArrayGridNode,
   GridNodeType,
   IAnimationNode,
   IGridNode,
@@ -56,7 +55,7 @@ const GridNode = ({
   const [timeouts] = useState<Array<number>>([]);
   const Icon = NodeIconMap[node.type];
 
-  const updateValues = (values: ArrayGridNode) => {
+  const updateValues = (values: Array<IGridNode>) => {
     dispatch({ type: AnimationInfosActionType.update, payload: values });
   };
 
