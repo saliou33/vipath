@@ -16,6 +16,7 @@ export const djikstra = (
 
   while (queue.length() > 0) {
     const current = queue.dequeue() as IGridNode;
+    current.visited = true;
 
     if (matrix.eq(current, end)) {
       return matrix.animate(start, end);
@@ -27,7 +28,6 @@ export const djikstra = (
       if (!neighbor.visited) {
         const distance = current.distance + neighbor.weight;
         if (distance < neighbor.distance) {
-          neighbor.visited = true;
           neighbor.parent = current;
           neighbor.distance = distance;
           queue.enqueue(neighbor);

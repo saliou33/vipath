@@ -14,6 +14,7 @@ export const bfs = (
 
   while (queue.length > 0) {
     const current = queue.shift() as IGridNode;
+    current.visited = true;
 
     if (matrix.eq(current, end)) {
       return matrix.animate(start, end);
@@ -22,7 +23,6 @@ export const bfs = (
     const neighbors = matrix.getNeighbors(current);
     for (const neighbor of neighbors) {
       if (!neighbor.visited) {
-        neighbor.visited = true;
         neighbor.parent = current;
         queue.push(neighbor);
         matrix.animateStep(neighbor);

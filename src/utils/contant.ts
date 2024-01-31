@@ -54,8 +54,9 @@ export type ItemFnArgType = Array<string | number | GridMatrix | Coord>;
 export type ItemType = {
   key: ItemListKeyType;
   name: string;
+  styles?: string;
+  description?: string;
   icon?: IconType;
-  class?: string;
 };
 
 export class ItemList extends Map<ItemListKeyType, ItemType> {
@@ -74,7 +75,6 @@ export const algorithms: ItemList = new ItemList([
   [AlgoType.bfs, { key: AlgoType.bfs, name: "Breadth-first Search" }],
   [AlgoType.dfs, { key: AlgoType.dfs, name: "Depth-first Search" }],
   [AlgoType.a_star, { key: AlgoType.a_star, name: "A* Search" }],
-
   [AlgoType.greedy, { key: AlgoType.greedy, name: "Greedy Algorithm" }],
   [AlgoType.swarm, { key: AlgoType.swarm, name: "Swarm" }],
   [
@@ -96,8 +96,9 @@ export const actions: ItemList = new ItemList([
     {
       key: AnimationActionType.play,
       name: "play",
+      description: "play animation",
       icon: HiMiniPlay,
-      class: AnimationActionType.play,
+      styles: AnimationActionType.play,
     },
   ],
   [
@@ -105,8 +106,9 @@ export const actions: ItemList = new ItemList([
     {
       key: AnimationActionType.pause,
       name: "pause",
+      description: "pause animation",
       icon: HiMiniPause,
-      class: AnimationActionType.pause,
+      styles: AnimationActionType.pause,
     },
   ],
   [
@@ -114,8 +116,9 @@ export const actions: ItemList = new ItemList([
     {
       key: AnimationActionType.clear,
       name: "clear",
+      description: "clear animation",
       icon: HiMiniNoSymbol,
-      class: AnimationActionType.clear,
+      styles: AnimationActionType.clear,
     },
   ],
   [
@@ -123,8 +126,9 @@ export const actions: ItemList = new ItemList([
     {
       key: AnimationActionType.reset,
       name: "reset",
+      description: "reset grid",
       icon: HiMiniArrowPath,
-      class: AnimationActionType.reset,
+      styles: AnimationActionType.reset,
     },
   ],
 ]);
