@@ -14,6 +14,12 @@ export enum GridNodeType {
   blank = "blank",
 }
 
+export enum AnimationState {
+  none = "none",
+  played = "played",
+  paused = "paused",
+}
+
 export interface IGridNode {
   type: GridNodeType;
   coord: Coord;

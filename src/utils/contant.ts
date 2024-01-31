@@ -1,15 +1,17 @@
 import { ReactNode } from "react";
 import { IconType } from "react-icons";
 import {
-  BiBlock,
-  BiCircle,
-  BiDumbbell,
-  BiPause,
-  BiPlay,
-  BiReset,
-  BiSolidRectangle,
-} from "react-icons/bi";
-import { Coord, GridMatrix } from "./interface";
+  HiMiniPlay,
+  HiMiniPause,
+  HiMiniNoSymbol,
+  HiMiniArrowPath,
+  HiMiniRectangleStack,
+  HiMiniLockClosed,
+  HiMiniCurrencyDollar,
+  HiMiniFaceSmile,
+  HiMiniBuildingOffice,
+} from "react-icons/hi2";
+import { Coord, GridMatrix, GridNodeType } from "./interface";
 
 export enum PointerType {
   wall = "wall",
@@ -91,7 +93,7 @@ export const actions: ItemList = new ItemList([
     {
       key: AnimationActionType.play,
       name: "play",
-      icon: BiPlay,
+      icon: HiMiniPlay,
       class: AnimationActionType.play,
     },
   ],
@@ -100,17 +102,8 @@ export const actions: ItemList = new ItemList([
     {
       key: AnimationActionType.pause,
       name: "pause",
-      icon: BiPause,
+      icon: HiMiniPause,
       class: AnimationActionType.pause,
-    },
-  ],
-  [
-    AnimationActionType.reset,
-    {
-      key: AnimationActionType.reset,
-      name: "reset",
-      icon: BiReset,
-      class: AnimationActionType.reset,
     },
   ],
   [
@@ -118,24 +111,42 @@ export const actions: ItemList = new ItemList([
     {
       key: AnimationActionType.clear,
       name: "clear",
-      icon: BiBlock,
+      icon: HiMiniNoSymbol,
       class: AnimationActionType.clear,
+    },
+  ],
+  [
+    AnimationActionType.reset,
+    {
+      key: AnimationActionType.reset,
+      name: "reset",
+      icon: HiMiniArrowPath,
+      class: AnimationActionType.reset,
     },
   ],
 ]);
 
+export const NodeIconMap = {
+  [GridNodeType.start]: HiMiniFaceSmile,
+  [GridNodeType.end]: HiMiniBuildingOffice,
+  [GridNodeType.weight]: HiMiniLockClosed,
+  [GridNodeType.bridge]: HiMiniCurrencyDollar,
+  [GridNodeType.wall]: null,
+  [GridNodeType.blank]: null,
+};
+
 export const pointers: ItemList = new ItemList([
   [
     PointerType.wall,
-    { key: PointerType.wall, name: "wall", icon: BiSolidRectangle },
+    { key: PointerType.wall, name: "wall", icon: HiMiniRectangleStack },
   ],
   [
     PointerType.bridge,
-    { key: PointerType.bridge, name: "bridge", icon: BiCircle },
+    { key: PointerType.bridge, name: "bridge", icon: HiMiniCurrencyDollar },
   ],
   [
     PointerType.weight,
-    { key: PointerType.weight, name: "weight", icon: BiDumbbell },
+    { key: PointerType.weight, name: "weight", icon: HiMiniLockClosed },
   ],
   [PointerType.blank, { key: PointerType.blank, name: "" }],
 ]);

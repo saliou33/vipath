@@ -1,21 +1,15 @@
 .play {
-  fill: theme("colors.green.200");
-  font-size: 2rem;
+  fill: theme("colors.green.500");
 }
 
 .pause {
-  fill: theme("colors.red.200");
-  font-size: 2rem;
+  fill: theme("colors.red.500");
 }
 
 .reset {
-  fill: theme("colors.blue.200");
-  font-size: 1.4rem;
-  margin-left: 0.6rem;
+  fill: theme("colors.blue.500");
 }
 
 .clear {
-  fill: theme("colors.slate.100");
-  font-size: 1.4rem;
-  margin-left: 0.6rem;
+  fill: theme("colors.yellow.500");
 }

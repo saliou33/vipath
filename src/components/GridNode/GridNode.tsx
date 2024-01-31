@@ -5,29 +5,39 @@ import {
   useRef,
   useState,
 } from "react";
-import { BiCool, BiDollarCircle, BiDumbbell, BiMap } from "react-icons/bi";
+
 import {
   AnimationInfosAction,
   AnimationInfosActionType,
 } from "../../context/reducers/AnimationInfos";
-import { ItemType } from "../../utils/contant";
+
+import { ItemType, NodeIconMap } from "../../utils/contant";
+
 import {
+  AnimationState,
   ArrayGridNode,
   GridNodeType,
   IAnimationNode,
   IGridNode,
 } from "../../utils/interface";
+
 import "./GridNode.css";
 
 type PropsType = {
   node: IGridNode;
-  isDrawing: boolean;
-  setIsDrawing: Dispatch<SetStateAction<boolean>>;
+  state: AnimationState;
   speed: number;
-  animation: IAnimationNode | null;
+  animation: IAnimationNode;
   pointer: ItemType;
+  isDrawing: boolean;
+  pausedStep: number;
+  setIsDrawing: Dispatch<SetStateAction<boolean>>;
+  setPausedStep: Dispatch<SetStateAction<number>>;
   dispatch: Dispatch<AnimationInfosAction>;
 };
+
+const NODE_PLAY_CLASSES = "play node";
+const PATH_PLAY_CLASSES = "play path";
 
 const GridNode = ({
   node,
@@ -36,13 +46,15 @@ const GridNode = ({
   isDrawing,
   setIsDrawing,
   dispatch,
+  pausedStep,
+  setPausedStep,
   speed,
+  state,
 }: PropsType) => {
   const ref = useRef<HTMLDivElement>(null);
-
   const [classes, setClasses] = useState("");
-
-  const timeouts: number[] = [];
+  const [timeouts] = useState<Array<number>>([]);
+  const Icon = NodeIconMap[node.type];
 
   const updateValues = (values: ArrayGridNode) => {
     dispatch({ type: AnimationInfosActionType.update, payload: values });
@@ -59,25 +71,25 @@ const GridNode = ({
     }
   };
 
-  const handleMouseDown = () => {
-    if (!isDrawing) {
-      updateNode();
-      setIsDrawing(true);
-    }
-  };
-  const handleMouseUp = () => {
-    if (isDrawing) {
-      setIsDrawing(false);
-    }
-  };
-  const handleMouseEnter = () => {
-    if (isDrawing) {
-      updateNode();
-    }
-  };
-
   useLayoutEffect(() => {
     const current = ref.current;
+
+    const handleMouseDown = () => {
+      if (!isDrawing) {
+        updateNode();
+        setIsDrawing(true);
+      }
+    };
+    const handleMouseUp = () => {
+      if (isDrawing) {
+        setIsDrawing(false);
+      }
+    };
+    const handleMouseEnter = () => {
+      if (isDrawing) {
+        updateNode();
+      }
+    };
 
     //make sure that the edge node are immutable
     if (node.type == GridNodeType.end || node.type == GridNodeType.start)
@@ -98,41 +110,71 @@ const GridNode = ({
     };
   });
 
-  //animation
-  if (animation && animation.step > 0 && !classes) {
-    const updateClasses = (classes: string) => {
+  // if no animation  clear timeouts
+  const clearTimeouts = () => {
+    while (timeouts.length > 0) {
       clearTimeout(timeouts.shift());
-      setClasses(classes);
-    };
+    }
+  };
 
+  const clear = () => {
+    clearTimeouts();
+    if (classes) {
+      setClasses("");
+    }
+  };
+
+  const pause = () => {
+    if (timeouts.length > 0) {
+      clearTimeouts();
+      if (classes) {
+        setPausedStep((step) =>
+          animation.step > step ? animation.step : step
+        );
+      }
+    }
+  };
+
+  const updateClasses = (classes: string) => {
+    setClasses(classes);
+    clearTimeout(timeouts.shift());
+  };
+
+  const animateStep = (classes: string, step: number) => {
     timeouts.push(
       setTimeout(() => {
-        updateClasses(`play node`);
-      }, speed * animation.step)
+        updateClasses(classes);
+      }, speed * 25 * (step - pausedStep))
     );
+  };
 
-    if (animation.inPath && animation.pathStep) {
-      timeouts.push(
-        setTimeout(() => {
-          updateClasses(`play path`);
-        }, speed * animation.pathStep)
-      );
+  const animate = () => {
+    if (animation.step > 0) {
+      if (!classes) {
+        animateStep(NODE_PLAY_CLASSES, animation.step);
+      }
+
+      if (animation.inPath && animation.pathStep) {
+        animateStep(PATH_PLAY_CLASSES, animation.pathStep);
+      }
     }
+  };
+
+  switch (state) {
+    case AnimationState.none:
+      clear();
+      break;
+    case AnimationState.paused:
+      pause();
+      break;
+    case AnimationState.played:
+      animate();
+      break;
   }
 
   return (
     <div ref={ref} className={`grid-node ${node.type} ${classes}`}>
-      <span className="z-[700]">
-        {node.type == GridNodeType.start ? (
-          <BiCool />
-        ) : node.type == GridNodeType.weight ? (
-          <BiDumbbell />
-        ) : node.type == GridNodeType.end ? (
-          <BiMap />
-        ) : node.type == GridNodeType.bridge ? (
-          <BiDollarCircle />
-        ) : null}
-      </span>
+      <span className="z-[700]">{Icon ? <Icon /> : null}</span>
     </div>
   );
 };

@@ -42,6 +42,7 @@ const Navbar = () => {
           name="Select Algorithm"
           items={algorithms}
           handleClick={handleSelectAlgo}
+          selectFirst={true}
         />
         <Dropdown
           name="Draw Node"

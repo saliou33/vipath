@@ -20,7 +20,7 @@ export class Matrix {
   ) {
     this.rows = rows;
     this.cols = cols;
-    this.gridMatrix = gridMatrix;
+    this.gridMatrix = structuredClone(gridMatrix);
     this.animationMatrix = animationMatrix;
   }
 

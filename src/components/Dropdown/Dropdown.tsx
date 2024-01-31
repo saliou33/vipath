@@ -5,10 +5,11 @@ import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 type PropsType = {
   name: string;
   items: ItemList;
+  selectFirst?: boolean;
   handleClick?: (item: ItemType) => void;
 };
 
-const Dropdown = ({ name, items, handleClick }: PropsType) => {
+const Dropdown = ({ name, items, selectFirst, handleClick }: PropsType) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<ItemType>();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -25,6 +26,12 @@ const Dropdown = ({ name, items, handleClick }: PropsType) => {
       setIsOpen(false);
     }
   };
+
+  if (selectFirst && !selected) {
+    if (items.size > 0) {
+      setSelected(items.values().next().value);
+    }
+  }
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);

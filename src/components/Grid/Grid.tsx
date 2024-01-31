@@ -1,12 +1,22 @@
 import { useContext, useState } from "react";
 import { Context, ContextValueType } from "../../context/context";
 import GridNode from "../GridNode/GridNode";
+import { AnimationState } from "../../utils/interface";
 
 const Grid = () => {
   const { animationInfos, actionInfos, dispatchAnimationInfos } =
     useContext<ContextValueType>(Context);
-  const { matrix, rows, cols, nodeSize, animations, speed } = animationInfos;
+
+  const { matrix, state, rows, cols, nodeSize, animations, speed } =
+    animationInfos;
+
   const [isDrawing, setIsDrawing] = useState(false);
+
+  const [pausedStep, setPausedStep] = useState(0);
+
+  if (state == AnimationState.none && pausedStep > 0) {
+    setPausedStep(0);
+  }
 
   const gridStyle = {
     display: "grid",
@@ -22,10 +32,13 @@ const Grid = () => {
           row.map((node, j) => (
             <GridNode
               key={`${i}-${j}`}
-              pointer={actionInfos.selectedPointer}
-              animation={animations && animations[i][j]}
-              speed={speed}
               node={node}
+              state={state}
+              speed={speed}
+              animation={animations[i][j]}
+              pointer={actionInfos.selectedPointer}
+              pausedStep={pausedStep}
+              setPausedStep={setPausedStep}
               isDrawing={isDrawing}
               setIsDrawing={setIsDrawing}
               dispatch={dispatchAnimationInfos}
