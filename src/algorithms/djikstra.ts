@@ -1,5 +1,5 @@
 import { AnimationMatrix, GridMatrix, IGridNode } from "../utils/interface";
-import { Matrix } from "./Matrix";
+import { Matrix } from "./Matrix.ts";
 import { PriorityQueue } from "./PriorityQueue.ts";
 
 export const djikstra = (

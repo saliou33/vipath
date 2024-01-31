@@ -1,0 +1,42 @@
+.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.5rem;
+  border-radius: 5px;
+  background-color: theme("colors.slate.100");
+  transform: translate(-50%, -50%);
+  box-shadow: 1px 1px 3px #000;
+  z-index: 9999;
+  opacity: 0.9;
+  display: none;
+  text-wrap: wrap;
+}
+
+.tooltip-parent {
+  position: relative;
+}
+
+.tooltip-parent:hover .tooltip {
+  display: block;
+}
+
+.tooltip-left {
+  top: 50%;
+  left: -160%;
+}
+
+.tooltip-right {
+  top: 50%;
+  left: 160%;
+}
+
+.tooltip-top {
+  left: 50%;
+  top: -160%;
+}
+
+.tooltip-bottom {
+  left: 50%;
+  top: 160%;
+}
