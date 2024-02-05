@@ -14,7 +14,6 @@ export const bi_bfs = (
 
   const qX: Array<IGridNode> = [start];
   const qY: Array<IGridNode> = [end];
-  let [i, j] = [0, 0];
 
   while (qX.length > 0 && qY.length > 0) {
     const x = qX.shift() as IGridNode;
@@ -39,7 +38,6 @@ export const bi_bfs = (
         x.visited = true;
         qX.push(neighborX);
         matrix.animateStep(neighborX);
-        i++;
       }
     }
 
@@ -49,7 +47,6 @@ export const bi_bfs = (
         vmatrix.getNode(neighborY).visited = true;
         qY.push(neighborY);
         matrix.animateStep(neighborY);
-        j++;
       }
     }
 
