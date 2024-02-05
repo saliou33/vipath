@@ -19,6 +19,8 @@
 
 .tooltip-parent:hover .tooltip {
   display: block;
+  animation: hide 1s ease-in;
+  animation-fill-mode: forwards;
 }
 
 .tooltip-left {
@@ -39,4 +41,13 @@
 .tooltip-bottom {
   left: 50%;
   top: 160%;
+}
+
+@keyframes hide {
+  from {
+    display: block;
+  }
+  to {
+    display: none;
+  }
 }

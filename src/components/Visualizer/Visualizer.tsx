@@ -3,7 +3,7 @@ import { Context, ContextValueType } from "../../context/context";
 import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
 import { AlgoType, AnimationActionType } from "../../utils/contant";
 import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
-import { a_star, bfs, dfs, djikstra } from "../../algorithms";
+import { a_star, bfs, bi_bfs, dfs, djikstra } from "../../algorithms";
 import { AnimationMatrix } from "../../utils/interface";
 import PointerIndicator from "../PointerIndicator/PointerIndicator";
 import Grid from "../Grid/Grid";
@@ -53,16 +53,18 @@ const Visualizer = () => {
       case AlgoType.bfs:
         play(bfs(matrix, animations, start, end, rows, cols));
         break;
-
       case AlgoType.dfs:
         play(dfs(matrix, animations, start, end, rows, cols));
         break;
-
       case AlgoType.djikstra:
         play(djikstra(matrix, animations, start, end, rows, cols));
         break;
       case AlgoType.a_star:
         play(a_star(matrix, animations, start, end, rows, cols));
+        break;
+      case AlgoType.bi_bfs:
+        play(bi_bfs(matrix, animations, start, end, rows, cols));
+        break;
     }
   };
 
@@ -93,15 +95,12 @@ const Visualizer = () => {
         case AnimationActionType.play:
           run();
           break;
-
         case AnimationActionType.pause:
           pause();
           break;
-
         case AnimationActionType.clear:
           clear();
           break;
-
         case AnimationActionType.reset:
           reset();
           break;

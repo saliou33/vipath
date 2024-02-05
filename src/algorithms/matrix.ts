@@ -21,7 +21,7 @@ export class Matrix {
     this.rows = rows;
     this.cols = cols;
     this.grid = structuredClone(grid);
-    this.animations = animations;
+    this.animations = structuredClone(animations);
     this.step = 1;
   }
 
@@ -31,6 +31,10 @@ export class Matrix {
 
   getCell(row: number, col: number): IGridNode {
     return this.grid[row][col];
+  }
+
+  getNode(node: IGridNode): IGridNode {
+    return this.getCell(node.coord.row, node.coord.col);
   }
 
   getWeight(row: number, col: number): number {
@@ -44,18 +48,15 @@ export class Matrix {
     if (row > 0 && this.getCell(row - 1, col).type != GridNodeType.wall) {
       neighbors.push(this.getCell(row - 1, col));
     }
-
     if (
       row < this.rows - 1 &&
       this.getCell(row + 1, col).type != GridNodeType.wall
     ) {
       neighbors.push(this.getCell(row + 1, col));
     }
-
     if (col > 0 && this.getCell(row, col - 1).type != GridNodeType.wall) {
       neighbors.push(this.getCell(row, col - 1));
     }
-
     if (
       col < this.cols - 1 &&
       this.getCell(row, col + 1).type != GridNodeType.wall
@@ -78,8 +79,26 @@ export class Matrix {
     }
 
     path.unshift(startNode);
-
     return path;
+  }
+
+  reconstructPathBi(
+    start: IGridNode,
+    end: IGridNode,
+    intersection: IGridNode,
+    vmatrix: Matrix
+  ): Array<IGridNode> {
+    const endPath: Array<IGridNode> = vmatrix.reconstructPath(
+      end,
+      intersection
+    );
+
+    if (endPath.length > 0) {
+      endPath.pop();
+      endPath.reverse();
+    }
+
+    return [...this.reconstructPath(start, intersection), ...endPath];
   }
 
   eq(node1: IGridNode, node2: IGridNode): boolean {
@@ -108,15 +127,27 @@ export class Matrix {
     }
   }
 
-  animate(start: IGridNode, end: IGridNode) {
-    const path = this.reconstructPath(start, end);
-    let foot = 0;
+  animate(
+    start: IGridNode,
+    end: IGridNode,
+    intersection?: IGridNode,
+    vmatrix?: Matrix
+  ) {
+    let path: Array<IGridNode> = [];
+
+    if (intersection && vmatrix) {
+      path = this.reconstructPathBi(start, end, intersection, vmatrix);
+    } else {
+      path = this.reconstructPath(start, end);
+    }
+
+    let step = 0;
 
     path.forEach(({ coord }) => {
       this.animations[coord.row][coord.col] = {
         ...this.animations[coord.row][coord.col],
         inPath: true,
-        pathStep: this.step + foot++,
+        pathStep: this.step + step++,
       };
     });
 

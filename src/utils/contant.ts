@@ -23,12 +23,10 @@ export enum PointerType {
 export enum AlgoType {
   djikstra,
   greedy,
-  swarm,
-  convergent_swarm,
-  bidirectional_swarm,
   bfs,
   dfs,
   a_star,
+  bi_bfs,
 }
 
 export enum PatternType {
@@ -76,18 +74,7 @@ export const algorithms: ItemList = new ItemList([
   [AlgoType.dfs, { key: AlgoType.dfs, name: "Depth-first Search" }],
   [AlgoType.a_star, { key: AlgoType.a_star, name: "A* Search" }],
   [AlgoType.greedy, { key: AlgoType.greedy, name: "Greedy Algorithm" }],
-  [AlgoType.swarm, { key: AlgoType.swarm, name: "Swarm" }],
-  [
-    AlgoType.convergent_swarm,
-    { key: AlgoType.convergent_swarm, name: "Convergent Swarm Algorithm" },
-  ],
-  [
-    AlgoType.bidirectional_swarm,
-    {
-      key: AlgoType.bidirectional_swarm,
-      name: "Bidirectional Swarm Algorithm",
-    },
-  ],
+  [AlgoType.bi_bfs, { key: AlgoType.bi_bfs, name: "Bidirectional BFS" }],
 ]);
 
 export const actions: ItemList = new ItemList([
