@@ -13,7 +13,7 @@ export const bi_bfs = (
   const vmatrix = new Matrix(grid, animations, rows, cols);
 
   const qX: Array<IGridNode> = [start];
-  const qY: Array<IGridNode> = [end];
+  const qY: Array<IGridNode> = [vmatrix.getNode(end)];
 
   while (qX.length > 0 && qY.length > 0) {
     const x = qX.shift() as IGridNode;
@@ -21,7 +21,7 @@ export const bi_bfs = (
 
     if (
       (x.visited && vmatrix.getNode(x).visited) ||
-      (y.visited && vmatrix.getNode(y).visited)
+      (y.visited && matrix.getNode(y).visited)
     ) {
       if (x.visited && vmatrix.getNode(x).visited) {
         return matrix.animate(start, end, x, vmatrix);
@@ -30,21 +30,21 @@ export const bi_bfs = (
     }
 
     const neighborsX = matrix.getNeighbors(x);
-    const neighborsY = matrix.getNeighbors(y);
+    const neighborsY = vmatrix.getNeighbors(y);
 
     for (const neighborX of neighborsX) {
       if (!neighborX.visited) {
         neighborX.parent = x;
-        x.visited = true;
+        neighborX.visited = true;
         qX.push(neighborX);
         matrix.animateStep(neighborX);
       }
     }
 
     for (const neighborY of neighborsY) {
-      if (!vmatrix.getNode(neighborY).visited) {
-        vmatrix.getNode(neighborY).parent = vmatrix.getNode(y);
-        vmatrix.getNode(neighborY).visited = true;
+      if (!neighborY.visited) {
+        neighborY.parent = y;
+        neighborY.visited = true;
         qY.push(neighborY);
         matrix.animateStep(neighborY);
       }
@@ -53,5 +53,5 @@ export const bi_bfs = (
     matrix.increment();
   }
 
-  return [];
+  return matrix.animations;
 };

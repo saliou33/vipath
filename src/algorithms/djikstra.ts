@@ -38,5 +38,5 @@ export const djikstra = (
     matrix.increment();
   }
 
-  return [];
+  return matrix.animations;
 };

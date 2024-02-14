@@ -46,5 +46,5 @@ export const a_star = (
     }
   }
 
-  return [];
+  return matrix.animations;
 };

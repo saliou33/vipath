@@ -32,5 +32,5 @@ export const bfs = (
     matrix.increment();
   }
 
-  return [];
+  return matrix.animations;
 };

@@ -5,13 +5,20 @@ import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 type PropsType = {
   name: string;
   items: ItemList;
-  selectFirst?: boolean;
-  handleClick?: (item: ItemType) => void;
+  selectOpt?: boolean;
+  unselectOpt?: boolean;
+  handleClick?: (item: ItemType | null) => void;
 };
 
-const Dropdown = ({ name, items, selectFirst, handleClick }: PropsType) => {
+const Dropdown = ({
+  name,
+  items,
+  selectOpt,
+  unselectOpt,
+  handleClick,
+}: PropsType) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<ItemType>();
+  const [selected, setSelected] = useState<ItemType | null>();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
@@ -27,7 +34,7 @@ const Dropdown = ({ name, items, selectFirst, handleClick }: PropsType) => {
     }
   };
 
-  if (selectFirst && !selected) {
+  if (selectOpt && !selected) {
     if (items.size > 0) {
       setSelected(items.values().next().value);
     }
@@ -39,6 +46,16 @@ const Dropdown = ({ name, items, selectFirst, handleClick }: PropsType) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const handleSelect = (item: ItemType) => {
+    if (selected != item) {
+      setSelected(item);
+      return handleClick && handleClick(item);
+    } else if (unselectOpt) {
+      setSelected(null);
+      return handleClick && handleClick(null);
+    }
+  };
 
   return (
     <div ref={dropdownRef} className="relative">
@@ -55,12 +72,7 @@ const Dropdown = ({ name, items, selectFirst, handleClick }: PropsType) => {
           {items.map((item, key) => (
             <li
               key={key}
-              onClick={() => {
-                setSelected(item);
-                if (handleClick) {
-                  handleClick(item);
-                }
-              }}
+              onClick={() => handleSelect(item)}
               className={`flex items-center gap-2 cursor-pointer px-2 hover:bg-slate-400 ${
                 selected?.key == item.key && "bg-slate-500 text-white"
               }`}

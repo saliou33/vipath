@@ -1,7 +1,13 @@
 import { useContext } from "react";
 import { Context } from "../../context/context";
 import { ActionInfosActionType } from "../../context/reducers/ActionInfos";
-import { ItemType, algorithms, pointers, actions } from "../../utils/contant";
+import {
+  ItemType,
+  algorithms,
+  pointers,
+  actions,
+  PointerType,
+} from "../../utils/contant";
 import Dropdown from "../Dropdown/Dropdown";
 import ActionList from "../ActionList/ActionList";
 import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos";
@@ -9,10 +15,10 @@ import { AnimationInfosActionType } from "../../context/reducers/AnimationInfos"
 const Navbar = () => {
   const { dispatchActionInfos, dispatchAnimationInfos } = useContext(Context);
 
-  const handleSelectAlgo = (item: ItemType) => {
+  const handleSelectAlgo = (item: ItemType | null) => {
     dispatchActionInfos({
       type: ActionInfosActionType.set_algo,
-      payload: { selectedAlgo: item },
+      payload: { selectedAlgo: item as ItemType },
     });
 
     dispatchAnimationInfos({
@@ -20,10 +26,14 @@ const Navbar = () => {
     });
   };
 
-  const handleSelectPointer = (item: ItemType) => {
+  const handleSelectPointer = (item: ItemType | null) => {
     dispatchActionInfos({
       type: ActionInfosActionType.set_pointer,
-      payload: { selectedPointer: item },
+      payload: {
+        selectedPointer: item
+          ? item
+          : (pointers.get(PointerType.blank) as ItemType),
+      },
     });
   };
 
@@ -42,12 +52,13 @@ const Navbar = () => {
           name="Select Algorithm"
           items={algorithms}
           handleClick={handleSelectAlgo}
-          selectFirst={true}
+          selectOpt={true}
         />
         <Dropdown
           name="Draw Node"
           items={pointers}
           handleClick={handleSelectPointer}
+          unselectOpt={true}
         />
       </div>
     </div>

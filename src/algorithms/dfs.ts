@@ -33,5 +33,5 @@ export const dfs = (
     matrix.increment();
   }
 
-  return [];
+  return matrix.animations;
 };

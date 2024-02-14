@@ -30,8 +30,10 @@ export enum AlgoType {
 }
 
 export enum PatternType {
-  maze,
   blank,
+  maze,
+  stairs,
+  random,
 }
 
 export enum AnimationActionType {
@@ -146,5 +148,8 @@ export const pointers: ItemList = new ItemList([
 ]);
 
 export const patterns: ItemList = new ItemList([
-  [PatternType.blank, { key: PatternType.blank, name: "" }],
+  [PatternType.blank, { key: PatternType.blank, name: "none" }],
+  [PatternType.maze, { key: PatternType.blank, name: "maze" }],
+  [PatternType.stairs, { key: PatternType.stairs, name: "stairs" }],
+  [PatternType.random, { key: PatternType.stairs, name: "random" }],
 ]);
