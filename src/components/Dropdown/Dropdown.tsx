@@ -10,7 +10,7 @@ type PropsType = {
   handleClick?: (item: ItemType | null) => void;
 };
 
-const Dropdown = ({
+export const Dropdown = ({
   name,
   items,
   selectOpt,
@@ -50,38 +50,63 @@ const Dropdown = ({
   const handleSelect = (item: ItemType) => {
     if (selected != item) {
       setSelected(item);
-      return handleClick && handleClick(item);
+      handleClick?.(item);
     } else if (unselectOpt) {
       setSelected(null);
-      return handleClick && handleClick(null);
+      handleClick?.(null);
     }
+    setIsOpen(false);
   };
 
   return (
-    <div ref={dropdownRef} className="relative">
-      <button
-        onClick={toggleDropdown}
-        className="flex items-center p-2 bg-slate-100 rounded-sm"
-      >
-        <span>{name}</span>
-        {isOpen ? <BiChevronUp /> : <BiChevronDown />}
-      </button>
+    <div ref={dropdownRef} className="relative inline-block text-left">
+      <div>
+        <button
+          onClick={toggleDropdown}
+          type="button"
+          className="inline-flex justify-between items-center w-full rounded-md px-4 py-2 bg-gray-700 text-sm font-medium text-gray-200 hover:bg-gray-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white transition-colors duration-200"
+          id="menu-button"
+          aria-expanded="true"
+          aria-haspopup="true"
+        >
+          <span className="mr-2">{selected?.name || name}</span>
+          {isOpen ? (
+            <BiChevronUp className="h-5 w-5 bg-gray-100" />
+          ) : (
+            <BiChevronDown className="h-5 w-5 bg-gray-100" />
+          )}
+        </button>
+      </div>
 
       {isOpen && (
-        <ul className="absolute z-[300] rounded-sm bg-slate-300 bg-opacity-90 flex flex-col translate-y-2 min-w-fit max-w-24 w-full">
-          {items.map((item, key) => (
-            <li
-              key={key}
-              onClick={() => handleSelect(item)}
-              className={`flex items-center gap-2 cursor-pointer px-2 hover:bg-slate-400 ${
-                selected?.key == item.key && "bg-slate-500 text-white"
-              }`}
-            >
-              {item.icon && <item.icon />}
-              <span>{item.name}</span>
-            </li>
-          ))}
-        </ul>
+        <div
+          className="origin-top absolute left-1/2 transform -translate-x-1/2 mt-2 w-56 rounded-md shadow-lg bg-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="menu-button"
+          tabIndex={-1}
+        >
+          <div className="py-1" role="none">
+            {Array.from(items.values()).map((item, index) => (
+              <button
+                key={index}
+                className={`${
+                  selected === item
+                    ? "bg-gray-600 text-white"
+                    : "text-gray-200 hover:bg-gray-600 hover:text-white"
+                } group flex items-center w-full px-4 py-2 text-sm transition-colors duration-200`}
+                role="menuitem"
+                tabIndex={-1}
+                onClick={() => handleSelect(item)}
+              >
+                {item.icon && (
+                  <item.icon className="bg-white" />
+                )}
+                <span className="px-2">{item.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

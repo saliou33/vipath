@@ -18,6 +18,8 @@ export enum PointerType {
   bridge = "bridge",
   weight = "weight",
   blank = "blank",
+  start = "start",
+  end = "end",
 }
 
 export enum AlgoType {
