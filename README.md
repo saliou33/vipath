@@ -2,7 +2,7 @@
 
 A modern, interactive pathfinding algorithm visualizer built with React, TypeScript, and Tailwind CSS. This tool helps you understand how different pathfinding algorithms work through beautiful visualizations.
 
-![Vipath Demo](https://saliou33.github.io/vipath/)
+🔗 [Live Demo](https://saliou33.github.io/vipath/)
 
 ## 🚀 Features
 
